@@ -33,7 +33,7 @@ class RoleController extends Controller
         }
     }
 
-    public function listAll(Request $req) {
+    public function list(Request $req) {
         try {
             $withPermission = $req->query('permission') === 'true';
             $data = $withPermission ? Role::with('permissions')->get() : Role::all();
