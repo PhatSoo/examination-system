@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Models\Permission;
 use App\Observers\PermissionObserver;
+use App\Models\Category;
+use App\Observers\CategoryObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Permission::observe(PermissionObserver::class);
+        Category::observe(CategoryObserver::class);
     }
 }
