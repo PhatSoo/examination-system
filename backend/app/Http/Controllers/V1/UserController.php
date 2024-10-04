@@ -16,7 +16,7 @@ class UserController extends Controller
                 'name' => 'required|string|min:3',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|string|min:6|confirmed',
-                'role_id' => 'numeric|exist:roles,id'
+                'role_id' => 'numeric|exists:roles,id'
             ]);
 
             if ($validated->fails()) {
