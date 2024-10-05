@@ -1,7 +1,6 @@
 export default {
-  content: ['index.html', './src/**/*.{html,js,vue}'],
+  content: ['./index.html', './src/**/*.{vue,js}'],
   theme: {
     extend: {}
-  },
-  plugins: []
+  }
 }
