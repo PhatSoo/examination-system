@@ -24,3 +24,9 @@ const isShowNavbar = ref(false)
 
 const toggleNavbar = () => (isShowNavbar.value = !isShowNavbar.value)
 </script>
+
+<style scoped>
+* {
+  text-transform: capitalize;
+}
+</style>

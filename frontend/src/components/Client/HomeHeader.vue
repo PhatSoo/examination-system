@@ -1,6 +1,6 @@
 <script setup>
-import MenuIcon from '../icons/MenuIcon.vue'
-import CloseIcon from '../icons/CloseIcon.vue'
+import MenuIcon from '@/components/icons/MenuIcon.vue'
+import CloseIcon from '@/components/icons/CloseIcon.vue'
 
 const { isShowNavbar, toggleNavbar } = defineProps(['isShowNavbar', 'toggleNavbar'])
 </script>
@@ -22,8 +22,8 @@ const { isShowNavbar, toggleNavbar } = defineProps(['isShowNavbar', 'toggleNavba
         <div class="navigate">result</div>
       </div>
       <div class="flex items-center gap-10">
-        <button class="btn btn-login">login</button>
-        <button class="btn btn-signup">sign up</button>
+        <router-link class="btn btn-login" :to="{ name: 'login' }">login</router-link>
+        <router-link class="btn btn-signup" :to="{ name: 'signup' }">sign up</router-link>
       </div>
     </nav>
 
@@ -33,7 +33,7 @@ const { isShowNavbar, toggleNavbar } = defineProps(['isShowNavbar', 'toggleNavba
         isShowNavbar ? 'right-0' : '-right-full'
       ]"
     >
-      <li class="">
+      <li>
         <button @click="toggleNavbar" class="rounded-full border-2 p-1 ml-4 hover:bg-sky-300">
           <CloseIcon />
         </button>
@@ -45,20 +45,16 @@ const { isShowNavbar, toggleNavbar } = defineProps(['isShowNavbar', 'toggleNavba
 
       <li class="flex flex-col gap-4 justify-end flex-1 pb-2">
         <hr class="border-1 border-gray-600" />
-        <button class="btn btn-login mx-5">login</button>
-        <button class="btn btn-signup mx-5">sign up</button>
+        <router-link class="btn btn-login mx-5" :to="{ name: 'login' }">login</router-link>
+        <router-link class="btn btn-signup mx-5" :to="{ name: 'signup' }">sign up</router-link>
       </li>
     </ul>
   </div>
 </template>
 
 <style scoped>
-* {
-  text-transform: capitalize;
-}
-
 .btn {
-  @apply px-5 py-2 border rounded-full transition transform duration-1000 ease-in-out hover:translate-y-1;
+  @apply text-center px-5 py-2 border rounded-full transition transform duration-1000 ease-in-out hover:translate-y-1;
 }
 
 .btn-login {
