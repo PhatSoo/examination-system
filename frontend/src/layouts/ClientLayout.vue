@@ -1,19 +1,25 @@
 <script setup>
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import HomeHeader from '@/components/Client/HomeHeader.vue'
+
+onBeforeMount(() => {
+  if (isShowNavbar.value) toggleNavbar()
+})
 </script>
 
 <template>
   <div class="flex flex-col h-screen">
     <HomeHeader :isShowNavbar :toggleNavbar />
 
-    <slot>
-      <!-- Content -->
-    </slot>
+    <main>
+      <slot>
+        <!-- Content -->
+      </slot>
+    </main>
 
     <div
       v-if="isShowNavbar"
-      class="fixed inset-0 bg-black bg-opacity-50 z-10"
+      class="fixed inset-0 z-10 bg-black bg-opacity-50"
       @click="toggleNavbar"
     ></div>
   </div>
