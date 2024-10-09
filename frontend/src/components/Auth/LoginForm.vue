@@ -1,5 +1,5 @@
 <template>
-  <form class="w-1/2 mt-4 space-y-8 flex flex-col items-center">
+  <form class="flex flex-col items-center w-1/2 mt-4 space-y-8">
     <div class="group-input">
       <label for="email">email: </label>
       <div>
@@ -26,24 +26,24 @@
     </div>
 
     <button
-      class="bg-primary-color hover:bg-hover-primary-color hover:text-slate-800 py-2 w-4/5 border-none rounded-3xl uppercase text-white font-bold"
+      class="w-4/5 py-2 font-bold text-white uppercase border-none bg-primary-color hover:bg-hover-primary-color hover:text-slate-800 rounded-3xl"
     >
       login
     </button>
 
     <div class="text-center">
       <p>or login using...</p>
-      <div class="flex gap-4 justify-center py-2">
-        <div class="icon-button bg-blue-700"><i class="fa-brands fa-facebook-f"></i></div>
-        <div class="icon-button bg-red-500"><i class="fa-solid fa-g"></i></div>
-        <div class="icon-button bg-black"><i class="fa-brands fa-github"></i></div>
+      <div class="flex justify-center gap-4 py-2">
+        <div class="bg-blue-700 icon-button"><i class="fa-brands fa-facebook-f"></i></div>
+        <div class="bg-red-500 icon-button"><i class="fa-solid fa-g"></i></div>
+        <div class="bg-black icon-button"><i class="fa-brands fa-github"></i></div>
       </div>
     </div>
 
     <div>
       <p>if have no account...</p>
       <router-link :to="{ name: 'signup' }">
-        <p class="text-center uppercase mt-2 font-bold">sign up</p>
+        <p class="mt-2 font-bold text-center uppercase">sign up</p>
       </router-link>
     </div>
   </form>

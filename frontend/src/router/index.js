@@ -6,27 +6,32 @@ const router = createRouter({
     {
       path: '/',
       name: 'client',
-      component: import('@/pages/ClientPage.vue')
+      component: () => import('@/pages/ClientPage.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: import('@/pages/LoginPage.vue')
+      component: () => import('@/pages/LoginPage.vue')
     },
     {
       path: '/signup',
       name: 'signup',
-      component: import('@/pages/SignupPage.vue')
+      component: () => import('@/pages/SignupPage.vue')
     },
     {
       path: '/info',
       name: 'info',
-      component: import('@/pages/InfoPage.vue')
+      component: () => import('@/pages/InfoPage.vue')
     },
     {
       path: '/results',
       name: 'results',
-      component: import('@/pages/ResultPage.vue')
+      component: () => import('@/pages/ResultPage.vue')
+    },
+    {
+      path: '/exam/:id',
+      name: 'exam',
+      component: () => import('@/pages/ExamPage.vue')
     }
   ]
 })
