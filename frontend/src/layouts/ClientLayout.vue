@@ -11,7 +11,7 @@ onBeforeMount(() => {
   <div class="flex flex-col h-screen">
     <HomeHeader :isShowNavbar :toggleNavbar />
 
-    <main>
+    <main class="flex-1 px-10">
       <slot>
         <!-- Content -->
       </slot>
@@ -19,7 +19,7 @@ onBeforeMount(() => {
 
     <div
       v-if="isShowNavbar"
-      class="fixed inset-0 z-10 bg-black bg-opacity-50"
+      class="fixed inset-0 z-40 bg-black bg-opacity-50"
       @click="toggleNavbar"
     ></div>
   </div>
@@ -31,8 +31,4 @@ const isShowNavbar = ref(false)
 const toggleNavbar = () => (isShowNavbar.value = !isShowNavbar.value)
 </script>
 
-<style scoped>
-* {
-  text-transform: capitalize;
-}
-</style>
+<style scoped></style>

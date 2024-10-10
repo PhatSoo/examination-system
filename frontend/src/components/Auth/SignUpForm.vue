@@ -1,5 +1,5 @@
 <template>
-  <form class="w-1/2 mt-4 space-y-8 flex flex-col items-center">
+  <form class="flex flex-col items-center w-4/5 max-w-3xl mt-4 space-y-8 md:1/3">
     <div class="group-input">
       <label for="email">email:</label>
       <div>
@@ -43,7 +43,7 @@
     </div>
 
     <button
-      class="bg-primary-color hover:bg-hover-primary-color hover:text-slate-800 py-2 w-4/5 border-none rounded-3xl uppercase text-white font-bold"
+      class="w-4/5 py-2 font-bold text-white uppercase border-none bg-primary-color hover:bg-hover-primary-color hover:text-slate-800 rounded-3xl"
     >
       signup
     </button>
@@ -51,7 +51,7 @@
     <div>
       <p>if have an account...</p>
       <router-link :to="{ name: 'login' }">
-        <p class="text-center uppercase mt-2 font-bold">login</p>
+        <p class="mt-2 font-bold text-center uppercase">login</p>
       </router-link>
     </div>
   </form>
@@ -75,6 +75,6 @@ p {
 }
 
 .group-input i {
-  @apply hidden md:inline-block;
+  @apply hidden lg:inline-block;
 }
 </style>

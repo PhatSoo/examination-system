@@ -3,5 +3,7 @@ import ClientLayout from '@/layouts/ClientLayout.vue'
 </script>
 
 <template>
-  <ClientLayout> results </ClientLayout>
+  <ClientLayout> About Page </ClientLayout>
 </template>
+
+<style scoped></style>

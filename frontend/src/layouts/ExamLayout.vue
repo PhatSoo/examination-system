@@ -124,11 +124,11 @@ onBeforeRouteLeave((to, from, next) => {
     </section>
 
     <section class="flex flex-1">
-      <div class="flex-grow p-4 border-none rounded-r-3xl bg-sky-500">
+      <div class="flex-grow p-4 md:border-none md:rounded-r-3xl bg-sky-500">
         <QuestionShow :question_number="statusArr[selectedQuestion - 1].question_number" />
       </div>
 
-      <div class="w-1/4 h-full">
+      <div class="hidden w-1/4 md:block">
         <ProgressTable :statusArr :selectedQuestion @change-question="handleChangeQuestion" />
       </div>
     </section>

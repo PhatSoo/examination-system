@@ -19,9 +19,9 @@ const navigate = reactive([
     route: '/info'
   },
   {
-    displayName: 'Result',
-    routeName: 'results',
-    route: '/results'
+    displayName: 'About',
+    routeName: 'about',
+    route: '/about'
   }
 ])
 </script>
@@ -54,7 +54,7 @@ const navigate = reactive([
 
     <ul
       :class="[
-        'flex flex-col fixed gap-4 h-screen top-0 w-80 bg-white pt-2 rounded-l-xl border-black z-20 p-2 transition-all duration-300 ease-in-out',
+        'flex flex-col fixed gap-4 h-screen top-0 w-80 bg-white pt-2 rounded-l-xl border-black z-50 p-2 transition-all duration-300 ease-in-out',
         isShowNavbar ? 'right-0' : '-right-full'
       ]"
     >
@@ -105,5 +105,9 @@ const navigate = reactive([
   nav {
     display: none;
   }
+}
+
+* {
+  text-transform: capitalize;
 }
 </style>
