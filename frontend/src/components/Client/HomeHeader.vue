@@ -4,7 +4,11 @@ import CloseIcon from '@/components/icons/CloseIcon.vue'
 import { useRoute } from 'vue-router'
 import { reactive } from 'vue'
 
-const { isShowNavbar, toggleNavbar } = defineProps(['isShowNavbar', 'toggleNavbar'])
+const { isShowNavbar, toggleNavbar, isSticky } = defineProps([
+  'isShowNavbar',
+  'toggleNavbar',
+  'isSticky'
+])
 const route = useRoute()
 
 const navigate = reactive([
@@ -27,10 +31,17 @@ const navigate = reactive([
 </script>
 
 <template>
-  <div class="flex items-center justify-between h-20 px-4 py-2 bg-white border-b-2 shadow-lg">
-    <div class="flex-1">
+  <header
+    :class="[
+      'flex items-center justify-between h-20 px-4 py-9 bg-white border-b-2 shadow-lg',
+      {
+        'bg-opacity-90 fixed w-full duration-300 -top-20 translate-y-full z-50': isSticky
+      }
+    ]"
+  >
+    <div>
       <router-link :to="{ name: 'client' }">
-        <h1 class="text-3xl">examination test</h1>
+        <h1 class="text-3xl w-fit">examination test</h1>
       </router-link>
     </div>
 
@@ -77,7 +88,7 @@ const navigate = reactive([
         <router-link class="mx-5 btn btn-signup" :to="{ name: 'signup' }">sign up</router-link>
       </li>
     </ul>
-  </div>
+  </header>
 </template>
 
 <style scoped>

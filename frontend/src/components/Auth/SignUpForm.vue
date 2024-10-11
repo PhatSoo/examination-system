@@ -1,5 +1,5 @@
 <template>
-  <form class="flex flex-col items-center w-4/5 max-w-3xl mt-4 space-y-8 md:1/3">
+  <form class="flex flex-col items-center w-4/5 max-w-3xl mt-4 space-y-8 md:w-1/3">
     <div class="group-input">
       <label for="email">email:</label>
       <div>

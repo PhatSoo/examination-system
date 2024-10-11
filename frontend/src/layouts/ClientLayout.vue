@@ -1,15 +1,31 @@
 <script setup>
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue'
 import HomeHeader from '@/components/Client/HomeHeader.vue'
+
+const isSticky = ref(false)
 
 onBeforeMount(() => {
   if (isShowNavbar.value) toggleNavbar()
 })
+
+const handleScroll = () => {
+  if (window.scrollY > 80) {
+    isSticky.value = true
+  } else {
+    isSticky.value = false
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => window.removeEventListener('scroll', handleScroll))
 </script>
 
 <template>
   <div class="flex flex-col h-screen">
-    <HomeHeader :isShowNavbar :toggleNavbar />
+    <HomeHeader :isSticky :isShowNavbar :toggleNavbar />
 
     <main class="flex-1 px-10">
       <slot>

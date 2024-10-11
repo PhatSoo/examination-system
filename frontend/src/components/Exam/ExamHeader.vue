@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import ProgressTable from './ProgressTable.vue'
 defineEmits(['submit-exam'])
 
 const nearTimeOut = ref(false)
@@ -62,14 +63,14 @@ const startCountdown = () => {
       <button
         class="px-5 py-2 text-lg font-bold text-black uppercase duration-150 border border-none rounded-lg bg-violet-500 md:hidden"
       >
-        Next
+        Next <i class="fa-solid fa-right-long"></i>
       </button>
 
       <button
         @click="$emit('submit-exam')"
         class="px-5 py-2 text-lg font-bold text-black uppercase duration-150 bg-green-300 border border-none rounded-lg md:text-2xl hover:text-white hover:bg-green-600 hover:translate-x-3"
       >
-        submit <i class="fa-solid fa-arrow-right"></i>
+        submit <i class="fas fa-upload"></i>
       </button>
     </div>
   </div>
@@ -85,6 +86,8 @@ const startCountdown = () => {
         </button>
 
         <hr class="mt-5 border-2" />
+
+        <ProgressTable />
       </div>
     </div>
   </div>

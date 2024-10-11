@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { inject } from 'vue'
 import QuestionButton from './QuestionButton.vue'
 
-const { statusArr, selectedQuestion } = defineProps(['statusArr', 'selectedQuestion'])
+// @ts-ignore
+const { statusArr, selectedQuestion, handleChangeQuestion } = inject('progressTableProps')
 
 const statusMapping = {
   0: 'bg-white', // not choose
@@ -18,7 +20,7 @@ const statusMapping = {
       :key="item.question_id"
       :status="statusMapping[item.question_status]"
       :isClicked="item.question_number === selectedQuestion"
-      @click="$emit('changeQuestion', item.question_id)"
+      @click="handleChangeQuestion(item.question_id)"
       >{{ item.question_number }}</QuestionButton
     >
   </div>

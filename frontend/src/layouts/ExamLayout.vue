@@ -3,7 +3,7 @@ import ExamHeader from '@/components/Exam/ExamHeader.vue'
 import ProgressTable from '@/components/Exam/ProgressTable.vue'
 import QuestionShow from '@/components/Exam/QuestionShow.vue'
 import ConfirmModal from '@/components/Exam/ConfirmModal.vue'
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, provide, reactive, ref } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import ExamInfoModal from '@/components/Exam/ExamInfoModal.vue'
 
@@ -74,6 +74,7 @@ const data = reactive({
 const handleChangeQuestion = (question_id) => {
   selectedQuestion.value = question_id
 }
+
 const handleShowConfirm = () => {
   showConfirm.value = !showConfirm.value
 }
@@ -90,6 +91,8 @@ const handleSubmit = () => {
   // turn off show confirm
   handleShowConfirm()
 }
+
+provide('progressTableProps', { statusArr, selectedQuestion, handleChangeQuestion })
 
 // Catch event go back & reload page
 onMounted(() => {
@@ -128,8 +131,8 @@ onBeforeRouteLeave((to, from, next) => {
         <QuestionShow :question_number="statusArr[selectedQuestion - 1].question_number" />
       </div>
 
-      <div class="hidden w-1/4 md:block">
-        <ProgressTable :statusArr :selectedQuestion @change-question="handleChangeQuestion" />
+      <div class="hidden w-1/4 md:block bg-cyan-300">
+        <ProgressTable />
       </div>
     </section>
 
