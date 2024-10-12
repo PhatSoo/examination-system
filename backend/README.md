@@ -51,9 +51,9 @@ docker compose up -d
 #### 5. Run migrations & Create client:
 
 ```bash
-php artisan migrate
+php artisan migrate --seed
 
-php php artisan passport:client --personal
+php artisan passport:client --personal
 ```
 
 #### 6. Run the server:
