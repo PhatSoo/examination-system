@@ -50,25 +50,29 @@ docker compose up -d
 
 #### 5. Run migrations & Create client:
 
+-   _Generate Laravel App Key_
+
 ```bash
 php artisan key:generate
 ```
-Generate Laravel App Key
+
+-   _Generate Passport Key_
 
 ```bash
 php artisan passport:keys
 ```
-Generate Passport Key
+
+-   _Run Migration_
 
 ```bash
 php artisan migrate --seed
 ```
-Run Migration
+
+-   _Create Client Key to use Passport_
 
 ```bash
 php artisan passport:client --personal
 ```
-Create Client Key to use Passport
 
 #### 6. Run the server:
 
