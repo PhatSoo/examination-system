@@ -13,8 +13,10 @@ class CategoryController extends Controller
 
     public function create(Request $req) {
         try {
-            $validated = Validator::make($req->all(), [
+            $fields = $req->only(['name', 'image_url']);
+            $validated = Validator::make($fields, [
                 'name' => 'required|string|unique:categories,name|min:5',
+                'image_url' => 'string'
             ]);
 
             if ($validated->fails()) {
@@ -22,7 +24,7 @@ class CategoryController extends Controller
             }
 
             $createdNew = new Category();
-            $createdNew->fill($req->all());
+            $createdNew->fill($fields);
             $createdNew->save();
 
             return $this->sendResponse(message: 'Create new Category success', statusCode: 201);
@@ -46,5 +48,22 @@ class CategoryController extends Controller
             return $this->sendError(message: $th->getMessage());
         }
     }
+
+    public function destroy(Request $req, $id) {
+        try {
+            $foundItem = Category::find($id);
+
+            if (!$foundItem) {
+                return $this->sendError(message: "Cannot find Category!", statusCode: 404);
+            }
+
+            $foundItem->delete();
+
+            return $this->sendResponse(message: "Remove Category with ID::${id} success");
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
 
 }

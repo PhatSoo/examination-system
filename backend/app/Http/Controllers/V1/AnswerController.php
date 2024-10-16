@@ -13,7 +13,8 @@ class AnswerController extends Controller
 
     public function create(Request $req) {
         try {
-            $validated = Validator::make($req->all(), [
+            $fields = $req->only(['title', 'is_correct', 'type', 'question_id']);
+            $validated = Validator::make($fields, [
                 'title' => 'required|string',
                 'is_correct' => 'required|boolean',
                 'type' => 'required|in:image,text',
@@ -25,7 +26,7 @@ class AnswerController extends Controller
             }
 
             $createdNew = new Answer();
-            $createdNew->fill($req->all());
+            $createdNew->fill($fields);
             $createdNew->save();
 
             return $this->sendResponse(message: 'Create new Answer success', statusCode: 201);
@@ -45,6 +46,22 @@ class AnswerController extends Controller
     public function detail(Request $req, $id) {
         try {
             return $this->sendResponse(message: "Retrieve Answer with ID::${id} success", data: Answer::find($id));
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
+    public function destroy(Request $req, $id) {
+        try {
+            $foundItem = Answer::find($id);
+
+            if (!$foundItem) {
+                return $this->sendError(message: "Cannot find Answer!", statusCode: 404);
+            }
+
+            $foundItem->delete();
+
+            return $this->sendResponse(message: "Remove Answer with ID::${id} success");
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
         }

@@ -36,9 +36,9 @@ class QuestionController extends Controller
         */
         try {
             DB::beginTransaction();
-            $question_fields = $req->only(['title', 'image_url', 'difficulty', 'category_id']);
+            $fields = $req->only(['title', 'image_url', 'difficulty', 'category_id']);
 
-            $validated = Validator::make($question_fields, [
+            $validated = Validator::make($fields, [
                 'title' => 'required|string|unique:questions,title',
                 'image_url' => 'string',
                 'difficulty' => 'required|in:easy,medium,hard',
@@ -51,7 +51,7 @@ class QuestionController extends Controller
             }
 
             $createdNew = new Question();
-            $createdNew->fill($question_fields);
+            $createdNew->fill($fields);
             $createdNew->save();
 
             // after create question
@@ -127,5 +127,22 @@ class QuestionController extends Controller
             return $this->sendError(message: $th->getMessage());
         }
     }
+
+    public function destroy(Request $req, $id) {
+        try {
+            $foundItem = Question::find($id);
+
+            if (!$foundItem) {
+                return $this->sendError(message: "Cannot find Question!", statusCode: 404);
+            }
+
+            $foundItem->delete();
+
+            return $this->sendResponse(message: "Remove Question with ID::${id} success");
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
 
 }

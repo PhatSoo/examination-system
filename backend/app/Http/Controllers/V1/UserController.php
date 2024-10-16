@@ -12,11 +12,12 @@ class UserController extends Controller
 {
     public function register(Request $req) {
         try {
-            $validated = Validator::make($req->all(), [
+            $fields = $req->only(['name', 'email', 'password']);
+
+            $validated = Validator::make($fields, [
                 'name' => 'required|string|min:3',
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|string|email|unique:users,email',
                 'password' => 'required|string|min:6|confirmed',
-                'role_id' => 'numeric|exists:roles,id'
             ]);
 
             if ($validated->fails()) {
@@ -24,7 +25,7 @@ class UserController extends Controller
             }
 
             $createdNew = new User();
-            $createdNew->fill($req->all());
+            $createdNew->fill($fields);
             $createdNew->save();
 
             return $this->sendResponse(message: 'Create new Account success', statusCode: 201);
@@ -58,7 +59,7 @@ class UserController extends Controller
 
     public function profile(Request $req) {
         try {
-            return $this->sendResponse(message: 'Get Profile success!', data: auth()->user());
+            return $this->sendResponse(message: 'Get Profile success!', data: auth()->user()->load('role'));
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
         }
@@ -72,4 +73,23 @@ class UserController extends Controller
             return $this->sendError(message: $th->getMessage());
         }
     }
+
+    public function destroy(Request $req, $id) {
+        try {
+            $foundItem = User::find($id);
+
+            if (!$foundItem) {
+                return $this->sendError(message: "Cannot find User!", statusCode: 404);
+            }
+
+            $foundItem->delete();
+
+            return $this->sendResponse(message: "Remove User with ID::${id} success");
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
+    public function createUserByAdmin(Request $req) {}
+
 }

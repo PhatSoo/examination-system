@@ -32,36 +32,42 @@ Route::prefix('v1')->group(function () {
             Route::post('/', 'create');
             Route::post('/add-permissions/{id}', 'addPermission');
             Route::get('/{id}', 'detail');
+            Route::delete('/{id}', 'destroy');
         });
 
         Route::prefix('/permission')->controller(PermissionController::class)->group(function () {
             Route::get('/', 'list');
             Route::get('/{id}', 'detail');
             Route::post('/', 'create');
+            Route::delete('/{id}', 'destroy');
         });
 
         Route::prefix('/category')->controller(CategoryController::class)->group(function () {
             Route::get('/', 'list');
             Route::get('/{id}', 'detail');
             Route::post('/', 'create');
+            Route::delete('/{id}', 'destroy');
         });
 
         Route::prefix('/question')->controller(QuestionController::class)->group(function () {
             Route::get('/', 'list');
             Route::get('/{id}', 'detail');
             Route::post('/', 'create');
+            Route::delete('/{id}', 'destroy');
         });
 
         Route::prefix('/answer')->controller(AnswerController::class)->group(function () {
             Route::get('/', 'list');
             Route::get('/{id}', 'detail');
             Route::post('/', 'create');
+            Route::delete('/{id}', 'destroy');
         });
 
         Route::prefix('/exam')->controller(ExamController::class)->group(function () {
             Route::get('/', 'list');
             Route::get('/{id}', 'detail');
             Route::post('/', 'create');
+            Route::delete('/{id}', 'destroy');
         });
 
     });

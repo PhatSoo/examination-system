@@ -12,7 +12,8 @@ class PermissionController extends Controller
 {
     public function create(Request $req) {
         try {
-            $validated = Validator::make($req->all(), [
+            $fields = $req->only(['name']);
+            $validated = Validator::make($fields, [
                 'name' => 'required|string|unique:permissions,name',
             ]);
 
@@ -21,7 +22,7 @@ class PermissionController extends Controller
             }
 
             $createdNew = new Permission();
-            $createdNew->fill($req->all());
+            $createdNew->fill($fields);
             $createdNew->save();
 
             return $this->sendResponse(message: 'Create new Permission success', statusCode: 201);
@@ -48,4 +49,21 @@ class PermissionController extends Controller
 
         return $this->sendResponse(message: "Retrieve Permission with ID::${id} success", data: $data);
     }
+
+    public function destroy(Request $req, $id) {
+        try {
+            $foundItem = Permission::find($id);
+
+            if (!$foundItem) {
+                return $this->sendError(message: "Cannot find Permission!", statusCode: 404);
+            }
+
+            $foundItem->delete();
+
+            return $this->sendResponse(message: "Remove Permission with ID::${id} success");
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
 }

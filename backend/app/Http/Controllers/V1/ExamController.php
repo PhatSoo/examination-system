@@ -12,8 +12,8 @@ class ExamController extends Controller
 {
     public function create(Request $req) {
         try {
-            $used_fields = $req->only(['user_id', 'category_id']);
-            $validated = Validator::make($used_fields, [
+            $fields = $req->only(['user_id', 'category_id']);
+            $validated = Validator::make($fields, [
                 'user_id' => 'required|numeric|exists:users,id',
                 'category_id' => 'required|numeric|exists:categories,id',
             ]);
@@ -23,7 +23,7 @@ class ExamController extends Controller
             }
 
             $createdNew = new Exam();
-            $createdNew->fill($used_fields);
+            $createdNew->fill($fields);
             $createdNew->save();
 
             return $this->sendResponse(message: 'Create new Exam success', statusCode: 201);
@@ -31,4 +31,21 @@ class ExamController extends Controller
             return $this->sendError(message: $th->getMessage());
         }
     }
+
+    public function destroy(Request $req, $id) {
+        try {
+            $foundItem = Exam::find($id);
+
+            if (!$foundItem) {
+                return $this->sendError(message: "Cannot find Exam!", statusCode: 404);
+            }
+
+            $foundItem->delete();
+
+            return $this->sendResponse(message: "Remove Exam with ID::${id} success");
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
 }
