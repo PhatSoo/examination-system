@@ -10,11 +10,18 @@ use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\QuestionController;
 use App\Http\Controllers\V1\AnswerController;
 use App\Http\Controllers\V1\ExamController;
+use App\Http\Controllers\V1\SocialiteController;
 
 Route::prefix('v1')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::post('/login', 'login');
         Route::post('/register', 'register');
+    });
+
+    Route::middleware([\Illuminate\Session\Middleware\StartSession::class])->controller(SocialiteController::class)->group(function () {
+        Route::get('/auth/google/callback', 'callbackFromGoogle');
+
+        Route::get('/auth/google', 'redirectToGoogle');
     });
 
     Route::group([
@@ -25,7 +32,6 @@ Route::prefix('v1')->group(function () {
             Route::get('/profile', 'profile');
             Route::post('/logout',  'logout');
         });
-
 
         Route::prefix('/role')->controller(RoleController::class)->group(function () {
             Route::get('/', 'list');

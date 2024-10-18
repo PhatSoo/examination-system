@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function register(Request $req) {
         try {
-            $fields = $req->only(['name', 'email', 'password']);
+            $fields = $req->only(['name', 'email', 'password', 'password_confirmation']);
 
             $validated = Validator::make($fields, [
                 'name' => 'required|string|min:3',
@@ -50,7 +50,7 @@ class UserController extends Controller
             }
 
             return $this->sendResponse(message: 'Login success!', data: [
-                'token' => auth()->user()->createToken('test')->accessToken
+                'token' => auth()->user()->createToken('Password Token')->accessToken
             ]);
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
