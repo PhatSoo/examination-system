@@ -32,7 +32,15 @@ class User extends Authenticatable
         ];
     }
 
+    public function isAdmin() {
+        return $this->role->name === 'admin';
+    }
+
     public function role() {
         return $this->belongsTo(Role::class);
+    }
+
+    public function categories() {
+        return $this->hasMany(Category::class);
     }
 }

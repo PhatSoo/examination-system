@@ -36,7 +36,9 @@ class UserController extends Controller
 
     public function login(Request $req) {
         try {
-            $validated = Validator::make($req->all(), [
+            $fields = $req->only(['email', 'password']);
+
+            $validated = Validator::make($fields, [
                 'email' => 'required|email',
                 'password' => 'required|string'
             ]);
@@ -45,12 +47,14 @@ class UserController extends Controller
                 return $this->sendError(message: $validated->messages(), statusCode: 400);
             }
 
-            if (!auth()->attempt($req->all())) {
+            if (!auth()->attempt($fields)) {
                 return $this->sendError(message: 'Login Failed', statusCode: 401);
             }
 
+            $role = auth()->user()->role->name;
+
             return $this->sendResponse(message: 'Login success!', data: [
-                'token' => auth()->user()->createToken('Password Token')->accessToken
+                'token' => auth()->user()->createToken("$role token")->accessToken
             ]);
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
