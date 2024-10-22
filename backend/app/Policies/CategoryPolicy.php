@@ -34,4 +34,15 @@ class CategoryPolicy
         }
         return Response::denyWithStatus(403, 'You have no permission to perform this action.!');
     }
+
+    public function manageQuestionAnswer(User $user, Category $category) {
+        if ($user->role->permissions->contains('name', 'edit-delete-own-question-answer')) {
+            if ($user->id === $category->user_id) {
+                return true;
+            }
+
+            return Response::denyWithStatus(403, "You have no permission to Edit|Delete Question in other's Category");
+        }
+        return Response::denyWithStatus(403, 'You have no permission to perform this action.!');
+    }
 }

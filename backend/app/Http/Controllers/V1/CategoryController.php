@@ -58,9 +58,27 @@ class CategoryController extends Controller
         }
     }
 
+    public function listByAuthor(Request $req, $author_id) {
+        try {
+            $data = Category::where('user_id', $author_id)->get();
+
+            return $this->sendResponse(message: "Retrieve Category of User ID::$author_id success.", data: $data);
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
     public function detail(Request $req, $id) {
         try {
-            return $this->sendResponse(message: "Retrieve Category with ID::$id success", data: Category::find($id));
+            $withUser = $req->query('userInfo') === 'true';
+
+            $data = Category::find($id);
+
+            if ($withUser) {
+                $data = $data->load('user');
+            }
+
+            return $this->sendResponse(message: "Retrieve Category with ID::$id success", data: $data);
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
         }
@@ -91,7 +109,7 @@ class CategoryController extends Controller
 
             $foundItem->update($fields);
 
-            return $this->sendResponse(message: "Update Category with id $id success.", statusCode: 201);
+            return $this->sendResponse(message: "Update Category with id $id success.", statusCode: 204);
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
         }

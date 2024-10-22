@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
+use App\Models\Category;
 use App\Models\Question;
 use App\Models\Answer;
 
@@ -20,7 +22,7 @@ class QuestionController extends Controller
                 "image_url": "",
                 "difficulty": "hard",
                 "category_id": 1,
-                "answer": [
+                "answer": [ // default === empty array
                     {
                         "title": "answer 1",
                         "is_correct": false,
@@ -36,6 +38,12 @@ class QuestionController extends Controller
         */
         try {
             DB::beginTransaction();
+
+            if (!Gate::check('create', Question::class)) {
+                DB::rollBack();
+                return $this->sendError(message: 'You have no permission to create Question.!', statusCode: 403);
+            }
+
             $fields = $req->only(['title', 'image_url', 'difficulty', 'category_id']);
 
             $validated = Validator::make($fields, [
@@ -50,6 +58,15 @@ class QuestionController extends Controller
                 return $this->sendError(message: $validated->messages(), statusCode: 400);
             }
 
+            // Check permission of current user with the Category
+            $category = Category::find($fields['category_id']);
+            $checked = Gate::inspect('manage', $category);
+            if (!$checked->allowed()) {
+                return $this->sendError(message: 'You have no permissions to add Questions for this Category!', statusCode: $checked->status());
+            }
+
+            $fields['user_id'] = auth()->user()->id;
+
             $createdNew = new Question();
             $createdNew->fill($fields);
             $createdNew->save();
@@ -63,6 +80,11 @@ class QuestionController extends Controller
             }
 
             $answer_fields = $req->only(['answers'])['answers'];
+
+            if (count($answer_fields) > 4) {
+                DB::rollBack();
+                return $this->sendError(message: 'Too many Answers for this Question', statusCode: 400);
+            }
 
             foreach ($answer_fields as &$field) {
                 $field['question_id'] = $question_id;
@@ -90,10 +112,60 @@ class QuestionController extends Controller
         }
     }
 
+    public function update(Request $req, $id) {
+        try {
+            $foundItem = Question::find($id);
+            if (!$foundItem) {
+                return $this->sendError(message: "Question with ID::$id not found!", statusCode: 404);
+            }
+
+            $checked = Gate::inspect('manage', $foundItem);
+            if (!$checked->allowed()) {
+                return $this->sendError(message: $checked->message(), statusCode: $checked->status());
+            }
+
+            $fields = $req->only(['title', 'image_url', 'difficulty', 'category_id']);
+
+            $validated = Validator::make($fields, [
+                'title' => 'string|unique:questions,title',
+                'image_url' => 'string',
+                'difficulty' => 'in:easy,medium,hard',
+                'category_id' => 'numeric|exists:categories,id'
+            ]);
+
+            if ($validated->fails()) {
+                return $this->sendError(message: $validated->messages(), statusCode: 400);
+            }
+
+            // Check permission of current user with the Category
+            $category = Category::find($fields['category_id']);
+            $checked = Gate::inspect('manage', $category);
+            if (!$checked->allowed()) {
+                return $this->sendError(message: 'You have no permissions to edit Question for this Category!', statusCode: $checked->status());
+            }
+
+            $foundItem->update($fields);
+
+            return $this->sendResponse(message: "Update Question with ID::$id success.", statusCode: 204);
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
     public function list(Request $req) {
         try {
             $withCategory = $req->query('category') === 'true';
-            $data = $withCategory ? Question::with('category')->get() : Question::all();
+            $withOwner = $req->query('owner') === 'true';
+
+            if ($withOwner) {
+                $data = auth()->user()->questions;
+            } else {
+                $data = Question::all();
+            }
+
+            if ($withCategory) {
+                $data->load('category');
+            }
 
             return $this->sendResponse(message: 'Retrieve all Question success', data: $data);
         } catch (\Throwable $th) {
@@ -134,6 +206,11 @@ class QuestionController extends Controller
 
             if (!$foundItem) {
                 return $this->sendError(message: "Cannot find Question!", statusCode: 404);
+            }
+
+            $checked = Gate::inspect('manage', $foundItem);
+            if (!$checked->allowed()) {
+                return $this->sendError(message: $checked->message(), statusCode: $checked->status());
             }
 
             $foundItem->delete();

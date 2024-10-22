@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\V1\UserController;
+use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\RoleController;
 use App\Http\Controllers\V1\PermissionController;
 use App\Http\Controllers\V1\CategoryController;
@@ -13,7 +13,7 @@ use App\Http\Controllers\V1\ExamController;
 use App\Http\Controllers\V1\SocialiteController;
 
 Route::prefix('v1')->group(function () {
-    Route::controller(UserController::class)->group(function () {
+    Route::controller(AuthController::class)->group(function () {
         Route::post('/login', 'login');
         Route::post('/register', 'register');
     });
@@ -28,7 +28,7 @@ Route::prefix('v1')->group(function () {
         "middleware" => ["auth:api"]
     ], function () {
 
-        Route::controller(UserController::class)->group(function () {
+        Route::controller(AuthController::class)->group(function () {
             Route::get('/profile', 'profile');
             Route::post('/logout',  'logout');
         });
@@ -50,6 +50,7 @@ Route::prefix('v1')->group(function () {
 
         Route::prefix('/category')->controller(CategoryController::class)->group(function () {
             Route::get('/', 'list');
+            Route::get('/by-user/{author_id}', 'listByAuthor');
             Route::get('/{id}', 'detail');
             Route::post('/', 'create');
             Route::put('/{id}', 'update');
@@ -60,6 +61,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/', 'list');
             Route::get('/{id}', 'detail');
             Route::post('/', 'create');
+            Route::put('/{id}', 'update');
             Route::delete('/{id}', 'destroy');
         });
 

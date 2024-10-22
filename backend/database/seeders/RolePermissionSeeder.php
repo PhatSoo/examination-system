@@ -26,11 +26,9 @@ class RolePermissionSeeder extends Seeder
             'view-result' => 'Can view their own exam results',
             'create-category' => 'Can create categories',
             'join-exam' => 'Can join exams',
-            'create-question' => 'Can create questions for their exams',
-            'create-answer' => 'Can create answers for their questions',
+            'create-question-answer' => 'Can create questions & answers for their exams',
             'edit-delete-own-category' => 'Can edit categories they created',
-            'edit-delete-own-question' => 'Can edit questions they created',
-            'edit-delete-own-answer' => 'Can edit answers they created',
+            'edit-delete-own-question-answer' => 'Can edit questions & answers they created',
             'view-result-category' => 'Can view all results of students that join the exam they created',
             'manage-category' => 'Can manage any categories (Admin only)',
             'manage-question' => 'Can manage any questions (Admin only)',
@@ -44,7 +42,8 @@ class RolePermissionSeeder extends Seeder
         }
 
         $admin->permissions()->sync(Permission::whereIn('name', ['manage-category', 'manage-question', 'manage-answer', 'view-all-results', 'full-access'])->get());
-        $teacher->permissions()->sync(Permission::whereIn('name', ['create-category', 'join-exam', 'create-question', 'create-answer', 'view-student-result', 'edit-delete-own-category', 'edit-delete-own-question', 'edit-delete-own-answer'])->get());
+        $teacher->permissions()->sync(Permission::whereIn('name', ['create-category', 'join-exam', 'create-question-answer', 'view-student-result',
+                                                                    'edit-delete-own-category', 'edit-delete-own-question-answer'])->get());
         $student->permissions()->sync(Permission::whereIn('name', ['view-exam', 'view-result', 'join-exam'])->get());
     }
 }
