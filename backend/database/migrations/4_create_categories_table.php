@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
+            $table->string('image_url')->nullable();
+            $table->integer('num_question')->default(0);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('status', ['pending', 'active', 'inactive'])->default('pending');
             $table->timestamps();
         });
     }
