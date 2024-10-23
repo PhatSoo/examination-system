@@ -2,10 +2,6 @@
 
 ## Table of Contents
 
--   `docker compose up -d`
--   `php artisan migrate`
--   `php artisan passport:client --personal`
-
 ## Getting Started
 
 > # REST API for Examination System
@@ -80,33 +76,108 @@ php artisan passport:client --personal
 php artisan serve
 ```
 
-## Creating new Account
+<br>
 
-<details>
-    <summary><code>POST</code> <code><b>/</b></code> <code>(create new account)</code></summary>
+---
 
-### Parameters
+# LIST ENDPOINTS
 
-> | name                 | type     | data type    | description         |
-> | -------------------- | -------- | ------------ | ------------------- |
-> | `email`              | required | string,email | email for login     |
-> | `name`               | required | string       | user name           |
-> | `role_id`            | optional | number       | user role           |
-> | `password`           | required | string       | password            |
-> | `password_confirmed` | required | string       | compare to password |
+> Base URL: **http://localhost:8000/api/v1**
 
-### Responses
+## 1. Authentication
 
-> | code  | response                  |
-> | ----- | ------------------------- |
-> | `201` | `Create new User success` |
-> | `400` | `Email has been taken`    |
-> | `500` | `Internal server error`   |
+-   ### Prefix: `NONE`
 
-### Example URL
+| Method | Endpoint    | Description       |
+| ------ | ----------- | ----------------- |
+| `POST` | `/login`    | Login to system   |
+| `POST` | `/register` | Create an account |
+| `POST` | `/logout`   | Logout to system  |
+| `GET`  | `/profile`  | Get user info     |
 
-> ```bash
-> http://localhost:8000/api/v1/register
-> ```
+## 2. Role
 
-</details>
+-   ### Prefix: `/role`
+
+| Method | Endpoint               | Description                         |
+| ------ | ---------------------- | ----------------------------------- |
+| `GET`  | `/`                    | Retrieve all `Role`                 |
+| `GET`  | `/{id}`                | `Role` detail                       |
+| `POST` | `/add-permission/{id}` | Add or Remove Permission for `Role` |
+
+## 3. Permission
+
+-   ### Prefix: `/permission`
+
+| Method | Endpoint | Description               |
+| ------ | -------- | ------------------------- |
+| `GET`  | `/`      | Retrieve all `Permission` |
+| `GET`  | `/{id}`  | `Permission` detail       |
+
+## 4. Category
+
+-   ### Prefix: `/category`
+
+| Method   | Endpoint             | Description                             |
+| -------- | -------------------- | --------------------------------------- |
+| `GET`    | `/`                  | Retrieve all `Category`                 |
+| `GET`    | `/{id}`              | `Category` detail                       |
+| `GET`    | `/by-user/{user_id}` | Retrieve `Category` by user ID          |
+| `POST`   | `/`                  | Create new `Category`                   |
+| `PUT`    | `/{id}`              | Update info `Category` (exclude status) |
+| `PATCH`  | `/{id}`              | Change status `Category` only           |
+| `DELETE` | `/{id}`              | Delete `Category`                       |
+
+## 5. Question
+
+-   ### Prefix: `/question`
+
+| Method   | Endpoint | Description             |
+| -------- | -------- | ----------------------- |
+| `GET`    | `/`      | Retrieve all `Question` |
+| `GET`    | `/{id}`  | `Question` detail       |
+| `POST`   | `/`      | Create new `Question`   |
+| `PUT`    | `/{id}`  | Update info `Question`  |
+| `DELETE` | `/{id}`  | Delete `Question`       |
+
+## 6. Answer
+
+-   ### Prefix: `/answer`
+
+| Method | Endpoint | Description          |
+| ------ | -------- | -------------------- |
+| `GET`  | `/{id}`  | `Answer` detail      |
+| `PUT`  | `/{id}`  | Update info `Answer` |
+
+## 7. Exam
+
+-   ### Prefix: `/exam`
+
+| Method | Endpoint | Description          |
+| ------ | -------- | -------------------- |
+| `POST` | `/`      | User join the `Exam` |
+
+<br>
+
+---
+
+# AUTHORIZATION SYSTEM
+
+## Roles & Permissions
+
+| #   | Role      | Permission                                                                      |
+| --- | --------- | ------------------------------------------------------------------------------- |
+| 1   | `admin`   | `full-access`                                                                   |
+| 2   | `teacher` | `manage-own-category`, `manage-own-question-answer`, `view-own-category-result` |
+| 3   | `student` | `join-exam`, `view-result`                                                      |
+
+## Permission describe
+
+| #   | Permission                   | Descriptions                                                             |
+| --- | ---------------------------- | ------------------------------------------------------------------------ |
+| 1   | `full-access`                | Can `fully access` to the system                                         |
+| 2   | `manage-own-category`        | Can **`Create` new & `Edit\|Delete`** `Category` they created            |
+| 3   | `manage-own-question-answer` | Can **`Create` new & `Edit\|Delete`** `Question` & `Answer` they created |
+| 4   | `view-own-category-result`   | Can view all results of students that join the `Exam` they created       |
+| 5   | `join-exam`                  | Can join `Exam`                                                          |
+| 6   | `view-result`                | Can view their own `Exam` results                                        |
