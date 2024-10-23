@@ -65,6 +65,16 @@ class QuestionController extends Controller
                 return $this->sendError(message: 'You have no permissions to add Questions for this Category!', statusCode: $checked->status());
             }
 
+            if ($category->status === 'pending') {
+                DB::rollBack();
+                return $this->sendError(message: "You can't add questions for ~Pending~ Category...", statusCode: 400);
+            }
+
+            if ($category->checkEnoughQuestions()) {
+                DB::rollBack();
+                return $this->sendError(message: "This Category has enough questions", statusCode: 400);
+            }
+
             $fields['user_id'] = auth()->user()->id;
 
             $createdNew = new Question();
@@ -79,7 +89,7 @@ class QuestionController extends Controller
                 return $this->sendError(message: 'Something went wrong went creating Question', statusCode: 400);
             }
 
-            $answer_fields = $req->only(['answers'])['answers'];
+            $answer_fields = $req->answers;
 
             if (count($answer_fields) > 4) {
                 DB::rollBack();

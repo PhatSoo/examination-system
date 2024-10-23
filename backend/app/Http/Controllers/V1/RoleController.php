@@ -87,7 +87,7 @@ class RoleController extends Controller
                 ]
             */
 
-            $permission_array = $req->only(['permissions'])['permissions'];
+            $permission_array = $req->permissions;
 
             $existing_permissions = Permission::whereIn('id', $permission_array)->pluck('id')->toArray();
 

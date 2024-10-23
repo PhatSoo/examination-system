@@ -33,19 +33,22 @@ Route::prefix('v1')->group(function () {
             Route::post('/logout',  'logout');
         });
 
-        Route::prefix('/role')->controller(RoleController::class)->group(function () {
-            Route::get('/', 'list');
-            // Route::post('/', 'create');
-            Route::post('/add-permissions/{id}', 'addPermission');
-            Route::get('/{id}', 'detail');
-            // Route::delete('/{id}', 'destroy');
-        });
+        Route::middleware('admin')->group(function () {
+                Route::prefix('/role')->controller(RoleController::class)->group(function () {
+                Route::get('/', 'list');
+                // Route::post('/', 'create');
+                Route::post('/add-permissions/{id}', 'addPermission');
+                Route::get('/{id}', 'detail');
+                // Route::delete('/{id}', 'destroy');
+            });
 
-        Route::prefix('/permission')->controller(PermissionController::class)->group(function () {
-            Route::get('/', 'list');
-            Route::get('/{id}', 'detail');
-            // Route::post('/', 'create');
-            // Route::delete('/{id}', 'destroy');
+            Route::prefix('/permission')->controller(PermissionController::class)->group(function () {
+                Route::get('/', 'list');
+                Route::get('/{id}', 'detail');
+                // Route::post('/', 'create');
+                // Route::delete('/{id}', 'destroy');
+            });
+
         });
 
         Route::prefix('/category')->controller(CategoryController::class)->group(function () {
@@ -54,6 +57,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}', 'detail');
             Route::post('/', 'create');
             Route::put('/{id}', 'update');
+            Route::patch('/{id}', 'changeStatus');
             Route::delete('/{id}', 'destroy');
         });
 
@@ -66,10 +70,8 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::prefix('/answer')->controller(AnswerController::class)->group(function () {
-            Route::get('/', 'list');
             Route::get('/{id}', 'detail');
-            Route::post('/', 'create');
-            Route::delete('/{id}', 'destroy');
+            Route::put('/{id}', 'update');
         });
 
         Route::prefix('/exam')->controller(ExamController::class)->group(function () {

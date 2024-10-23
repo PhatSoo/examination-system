@@ -5,43 +5,12 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Answer;
 
 class AnswerController extends Controller
 {
-
-    public function create(Request $req) {
-        try {
-            $fields = $req->only(['title', 'is_correct', 'type', 'question_id']);
-            $validated = Validator::make($fields, [
-                'title' => 'required|string',
-                'is_correct' => 'required|boolean',
-                'type' => 'required|in:image,text',
-                'question_id' => 'required|numeric|exists:questions,id'
-            ]);
-
-            if ($validated->fails()) {
-                return $this->sendError(message: $validated->messages(), statusCode: 400);
-            }
-
-            $createdNew = new Answer();
-            $createdNew->fill($fields);
-            $createdNew->save();
-
-            return $this->sendResponse(message: 'Create new Answer success', statusCode: 201);
-        } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
-        }
-    }
-
-    public function list(Request $req) {
-        try {
-            return $this->sendResponse(message: 'Retrieve all Answer success', data: Answer::all());
-        } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
-        }
-    }
 
     public function detail(Request $req, $id) {
         try {
@@ -51,17 +20,32 @@ class AnswerController extends Controller
         }
     }
 
-    public function destroy(Request $req, $id) {
+    public function update(Request $req, $id) {
         try {
             $foundItem = Answer::find($id);
 
             if (!$foundItem) {
                 return $this->sendError(message: "Cannot find Answer!", statusCode: 404);
             }
+            if (!Gate::check('manage', $foundItem->question)) {
+                return $this->sendError(message: "You have no permission to update this Answer", statusCode: 403);
+            }
 
-            $foundItem->delete();
+            $fields = $req->only(['title', 'is_correct', 'type']);
 
-            return $this->sendResponse(message: "Remove Answer with ID::${id} success");
+            $validated = Validator::make($fields, [
+                'title' => 'string',
+                'is_correct' => 'boolean',
+                'type' => 'string|in:text,image'
+            ]);
+
+            if ($fields['is_correct'] && $foundItem->checkValid()) {
+                return $this->sendError(message: 'This Question has correct Answer already!!', statusCode: 400);
+            }
+
+            $foundItem->update($fields);
+
+            return $this->sendResponse(message: "Update Answer with ID::${id} success");
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
         }

@@ -8,7 +8,7 @@ use Laravel\Passport\Http\Middleware\CheckForAnyScope;
 use Laravel\Passport\Http\Middleware\CheckScopes;
 
 use App\Http\Middleware\AlwaysAcceptJson;
-use App\Http\Middleware\PreventStudentMiddleware;
+use App\Http\Middleware\CheckAdminRole;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->use([
             AlwaysAcceptJson::class,
+        ]);
+
+        $middleware->alias([
+            'admin' => CheckAdminRole::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
