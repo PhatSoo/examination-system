@@ -11,7 +11,9 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'user_id'
+        'user_id',
+        'num_question',
+        'total_time'
     ];
 
     // Relationships
@@ -24,7 +26,7 @@ class Category extends Model
     }
 
     // Custom method
-    private function countQuestions() {
+    public function countQuestions() {
         return $this->questions->count();
     }
 

@@ -30,4 +30,8 @@ class Question extends Model
     public function checkHasCorrectAnswer() {
         return $this->answers->contains('is_correct', true);
     }
+
+    public function getCorrectAnswerId() {
+        return $this->answers()->where('is_correct', true)->pluck('id')->first() ?? 0;
+    }
 }

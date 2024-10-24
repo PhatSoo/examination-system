@@ -25,7 +25,7 @@ class QuestionPolicy
     }
 
     public function manage(User $user, Question $question) {
-        if ($user->role->permissions->contains('name', 'edit-delete-own-question-answer')) {
+        if ($user->role->permissions->contains('name', 'manage-own-question-answer')) {
             if ($user->id === $question->user_id) {
                 return true;
             }

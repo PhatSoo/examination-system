@@ -12,28 +12,6 @@ use App\Models\Permission;
 
 class RoleController extends Controller
 {
-
-    public function create(Request $req) {
-        try {
-            $fields = $req->only(['name']);
-            $validated = Validator::make($fields, [
-                'name' => 'required|string|unique:roles,name',
-            ]);
-
-            if ($validated->fails()) {
-                return $this->sendError(message: $validated->messages(), statusCode: 400);
-            }
-
-            $createdNew = new Role();
-            $createdNew->fill($fields);
-            $createdNew->save();
-
-            return $this->sendResponse(message: 'Create new Role success', statusCode: 201);
-        } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
-        }
-    }
-
     public function list(Request $req) {
         try {
             $withPermission = $req->query('permission') === 'true';
@@ -52,23 +30,6 @@ class RoleController extends Controller
 
         return $this->sendResponse(message: "Retrieve Role with ID::${id} success", data: $data);
     }
-
-    public function destroy(Request $req, $id) {
-        try {
-            $foundItem = Role::find($id);
-
-            if (!$foundItem) {
-                return $this->sendError(message: "Cannot find Role!", statusCode: 404);
-            }
-
-            $foundItem->delete();
-
-            return $this->sendResponse(message: "Remove Role with ID::${id} success");
-        } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
-        }
-    }
-
 
     public function addPermission(Request $req, $id /* role_id */) {
         try {

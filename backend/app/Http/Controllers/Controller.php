@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 abstract class Controller
 {
-    public function sendResponse($message = 'Success', $data = null, $statusCode = 200) {
+    public function sendResponse($message = 'Done', $data = null, $statusCode = 200) {
         $response = [
             'status' => 'success',
             'statusCode' => $statusCode,
