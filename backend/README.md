@@ -86,7 +86,7 @@ php artisan serve
 
 ## 1. Authentication
 
--   ### Prefix: `NONE`
+-   ### Prefix: `/`
 
 | Method | Endpoint    | Description       |
 | ------ | ----------- | ----------------- |
@@ -118,27 +118,27 @@ php artisan serve
 
 -   ### Prefix: `/category`
 
-| Method   | Endpoint             | Description                             |
-| -------- | -------------------- | --------------------------------------- |
-| `GET`    | `/`                  | Retrieve all `Category`                 |
-| `GET`    | `/{id}`              | `Category` detail                       |
-| `GET`    | `/by-user/{user_id}` | Retrieve `Category` by user ID          |
-| `POST`   | `/`                  | Create new `Category`                   |
-| `PUT`    | `/{id}`              | Update info `Category` (exclude status) |
-| `PATCH`  | `/{id}`              | Change status `Category` only           |
-| `DELETE` | `/{id}`              | Delete `Category`                       |
+| Method   | Endpoint              | Description                             |
+| -------- | --------------------- | --------------------------------------- |
+| `GET`    | `/`                   | Retrieve all `Category`                 |
+| `GET`    | `/{id}`               | `Category` detail                       |
+| `GET`    | `/{id}/get-questions` | Retrieve all `Question` in `Category`   |
+| `GET`    | `/by-user/{user_id}`  | Retrieve `Category` by user ID          |
+| `POST`   | `/`                   | Create new `Category`                   |
+| `PUT`    | `/{id}`               | Update info `Category` (exclude status) |
+| `PATCH`  | `/{id}`               | Change status `Category` only           |
+| `DELETE` | `/{id}`               | Delete `Category`                       |
 
 ## 5. Question
 
 -   ### Prefix: `/question`
 
-| Method   | Endpoint | Description             |
-| -------- | -------- | ----------------------- |
-| `GET`    | `/`      | Retrieve all `Question` |
-| `GET`    | `/{id}`  | `Question` detail       |
-| `POST`   | `/`      | Create new `Question`   |
-| `PUT`    | `/{id}`  | Update info `Question`  |
-| `DELETE` | `/{id}`  | Delete `Question`       |
+| Method   | Endpoint | Description            |
+| -------- | -------- | ---------------------- |
+| `GET`    | `/{id}`  | `Question` detail      |
+| `POST`   | `/`      | Create new `Question`  |
+| `PUT`    | `/{id}`  | Update info `Question` |
+| `DELETE` | `/{id}`  | Delete `Question`      |
 
 ## 6. Answer
 
@@ -153,9 +153,13 @@ php artisan serve
 
 -   ### Prefix: `/exam`
 
-| Method | Endpoint | Description          |
-| ------ | -------- | -------------------- |
-| `POST` | `/`      | User join the `Exam` |
+| Method | Endpoint                  | Description                                              |
+| ------ | ------------------------- | -------------------------------------------------------- |
+| `POST` | `/`                       | `User` join the `Exam`                                   |
+| `POST` | `/submit`                 | `User` submit the `Exam`                                 |
+| `GET`  | `/`                       | Retrieve all results of `User`                           |
+| `GET`  | `/user/{user_id}`         | Retrieve all results of specific `User`                  |
+| `GET`  | `/category/{category_id}` | Retrieve all results joined into `Exam` by `Category` ID |
 
 <br>
 
