@@ -13,8 +13,14 @@ class Role extends Model
         'name'
     ];
 
+    // Relationships
     public function permissions() {
         return $this->belongsToMany(Permission::class, 'role_permission');
+    }
+
+    // Custom method
+    public function hasPermission($permission) {
+        return $this->permissions->contains('name', $permission);
     }
 
 }

@@ -17,7 +17,7 @@ class CategoryPolicy
     }
 
     public function create(User $user) {
-        if ($user->role->permissions->contains('name', 'create-category')) {
+        if ($user->role->hasPermission('create-category')) {
             return true;
         }
 
@@ -25,7 +25,7 @@ class CategoryPolicy
     }
 
     public function manage(User $user, Category $category) {
-        if ($user->role->permissions->contains('name', 'edit-delete-own-category')) {
+        if ($user->role->hasPermission('manage-own-category')) {
             if ($user->id === $category->user_id) {
                 return true;
             }

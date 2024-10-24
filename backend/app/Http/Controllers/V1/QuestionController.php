@@ -32,7 +32,7 @@ class QuestionController extends Controller
                         "title": "answer 2 image url",
                         "is_correct": true,
                         "type": "image"
-                    }
+                    },...
                 ]
             }
         */
@@ -75,6 +75,14 @@ class QuestionController extends Controller
                 return $this->sendError(message: "This Category has enough questions", statusCode: 400);
             }
 
+            // Check number of Answer === 4 ?
+            $answer_fields = $req->answers;
+
+            if (count($answer_fields) <> 4) {
+                DB::rollBack();
+                return $this->sendError(message: 'The quantity of Answers must equal 4', statusCode: 400);
+            }
+
             $fields['user_id'] = auth()->user()->id;
 
             $createdNew = new Question();
@@ -87,13 +95,6 @@ class QuestionController extends Controller
             if (is_null($question_id)) {
                 DB::rollBack();
                 return $this->sendError(message: 'Something went wrong went creating Question', statusCode: 400);
-            }
-
-            $answer_fields = $req->answers;
-
-            if (count($answer_fields) > 4) {
-                DB::rollBack();
-                return $this->sendError(message: 'Too many Answers for this Question', statusCode: 400);
             }
 
             foreach ($answer_fields as &$field) {
@@ -162,27 +163,6 @@ class QuestionController extends Controller
         }
     }
 
-    public function list(Request $req) {
-        try {
-            $withCategory = $req->query('category') === 'true';
-            $withOwner = $req->query('owner') === 'true';
-
-            if ($withOwner) {
-                $data = auth()->user()->questions;
-            } else {
-                $data = Question::all();
-            }
-
-            if ($withCategory) {
-                $data->load('category');
-            }
-
-            return $this->sendResponse(message: 'Retrieve all Question success', data: $data);
-        } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
-        }
-    }
-
     public function detail(Request $req, $id) {
         try {
             $withCategory = $req->query('category') === 'true';
@@ -230,6 +210,4 @@ class QuestionController extends Controller
             return $this->sendError(message: $th->getMessage());
         }
     }
-
-
 }

@@ -16,15 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('category_id')->constrained('categories');
             $table->double('score')->default(0.0);
-            $table->timestamps();
-        });
-
-        Schema::create('exam_question', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('exam_id')->constrained('exams');
-            $table->foreignId('question_id')->constrained('questions');
-            $table->foreignId('answer_id')->constrained('answers');
-            $table->timestamps();
+            $table->integer('correct_answer')->default(0);
+            $table->timestamp('start_time');
+            $table->timestamp('end_time');
         });
     }
 

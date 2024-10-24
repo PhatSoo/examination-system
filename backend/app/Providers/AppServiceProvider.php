@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Models\Category;
 use App\Observers\CategoryObserver;
+use App\Models\Exam;
+use App\Observers\ExamObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Category::observe(CategoryObserver::class);
+        Exam::observe(ExamObserver::class);
     }
 }

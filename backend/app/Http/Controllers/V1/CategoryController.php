@@ -18,11 +18,13 @@ class CategoryController extends Controller
                 return $this->sendError(message: 'You have no permission for this action.!', statusCode: 403);
             }
 
-            $fields = $req->only(['name', 'image_url', 'num_question']);
+            $fields = $req->only(['name', 'image_url', 'num_question', 'total_time', 'random']);
             $validated = Validator::make($fields, [
                 'name' => 'required|string|unique:categories,name|min:5',
                 'image_url' => 'string',
-                'num_question' => 'required|numeric|min:10|max:50'
+                'num_question' => 'required|numeric|min:10|max:50',
+                'total_time' => 'required|numeric|min:10',
+                'random' => 'boolean'
             ]);
 
             if ($validated->fails()) {
@@ -54,6 +56,31 @@ class CategoryController extends Controller
             }
 
             return $this->sendResponse(message: $message, data: $data);
+        } catch (\Throwable $th) {
+            return $this->sendError(message: $th->getMessage());
+        }
+    }
+
+    public function listQuestionsOfCategory(Request $req, $id) {
+        try {
+            $foundItem = Category::find($id);
+            if (!$foundItem) {
+                return $this->sendError(message: "Category with ID::$id not found!", statusCode: 404);
+            }
+
+            $checked = Gate::inspect('manage', $foundItem);
+            if (!$checked->allowed()) {
+                return $this->sendError(message: $checked->message(), statusCode: $checked->status());
+            }
+
+            $data = $foundItem->questions;
+
+            $withAnswer = $req->query('answer') === 'true';
+            if ($withAnswer) {
+                $data->load('answers');
+            }
+
+            return $this->sendResponse(message: "Retrieve Answers of Category with ID::$id success.", data: $data);
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
         }
@@ -97,11 +124,14 @@ class CategoryController extends Controller
                 return $this->sendError(message: $checked->message(), statusCode: $checked->status());
             }
 
-            $fields = $req->only(['name', 'image_url']);
+            $fields = $req->only(['name', 'image_url', 'num_question', 'total_time', 'random']);
 
             $validated = Validator::make($fields, [
                 'name' => 'string|unique:categories,name|min:5',
                 'image_url' => 'string',
+                'num_question' => 'numeric|min:10|max:50',
+                'total_time' => 'numeric|min:10',
+                'random' => 'boolean'
             ]);
 
             if ($validated->fails()) {
@@ -145,27 +175,22 @@ class CategoryController extends Controller
                 return $this->sendError(message: "Cannot find Category!", statusCode: 404);
             }
 
-            $approveCategory = $req->query('approve') === 'true';
-            if ($approveCategory) {
-                if(!Gate::check('before', Category::class)) {
-                    return $this->sendError(message: "You have no permission...", statusCode: 403);
-                }
-
-                $foundItem->status = 'active';
-            } else {
-                $checked = Gate::inspect('manage', $foundItem);
-                if (!$checked->allowed()) {
-                    return $this->sendError(message: $checked->message(), statusCode: $checked->status());
-                }
-
-                $newStatus = $req->status;
-
-                if (!in_array($newStatus, ['active', 'inactive'])) {
-                    return $this->sendError(message: "Unsuitable status...", statusCode: 404);
-                }
-
-                $foundItem->status = $newStatus;
+            if($foundItem->status === 'pending' && !Gate::check('before', Category::class)) {
+                return $this->sendError(message: 'You must be waiting for Admin approve your Category', statusCode: 403);
             }
+
+            $checked = Gate::inspect('manage', $foundItem);
+            if (!$checked->allowed()) {
+                return $this->sendError(message: $checked->message(), statusCode: $checked->status());
+            }
+
+            $newStatus = $req->status;
+
+            if (!in_array($newStatus, ['active', 'inactive'])) {
+                return $this->sendError(message: "Unsuitable status...", statusCode: 400);
+            }
+
+            $foundItem->status = $newStatus;
 
             $foundItem->save();
 
