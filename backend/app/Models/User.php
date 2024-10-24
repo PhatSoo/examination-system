@@ -35,4 +35,12 @@ class User extends Authenticatable
     public function role() {
         return $this->belongsTo(Role::class);
     }
+
+    public function categories() {
+        return $this->hasMany(Category::class);
+    }
+
+    public function questions() {
+        return $this->hasMany(Question::class);
+    }
 }

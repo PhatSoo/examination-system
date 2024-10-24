@@ -13,14 +13,25 @@ class Question extends Model
         'title',
         'image_url',
         'difficulty',
-        'category_id'
+        'category_id',
+        'user_id'
     ];
 
+    // Relationships
     public function category() {
         return $this->belongsTo(Category::class);
     }
 
     public function answers() {
         return $this->hasMany(Answer::class);
+    }
+
+    // Custom method
+    public function checkHasCorrectAnswer() {
+        return $this->answers->contains('is_correct', true);
+    }
+
+    public function getCorrectAnswerId() {
+        return $this->answers()->where('is_correct', true)->pluck('id')->first() ?? 0;
     }
 }

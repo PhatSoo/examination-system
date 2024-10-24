@@ -4,8 +4,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Laravel\Passport\Http\Middleware\CheckForAnyScope;
+use Laravel\Passport\Http\Middleware\CheckScopes;
 
 use App\Http\Middleware\AlwaysAcceptJson;
+use App\Http\Middleware\CheckAdminRole;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,7 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->use([
             AlwaysAcceptJson::class,
         ]);
+
+        $middleware->alias([
+            'admin' => CheckAdminRole::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+
     })->create();

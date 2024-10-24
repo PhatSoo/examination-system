@@ -12,27 +12,6 @@ use App\Models\Permission;
 
 class RoleController extends Controller
 {
-
-    public function create(Request $req) {
-        try {
-            $validated = Validator::make($req->all(), [
-                'name' => 'required|string|unique:roles,name',
-            ]);
-
-            if ($validated->fails()) {
-                return $this->sendError(message: $validated->messages(), statusCode: 400);
-            }
-
-            $createdNew = new Role();
-            $createdNew->fill($req->all());
-            $createdNew->save();
-
-            return $this->sendResponse(message: 'Create new Role success', statusCode: 201);
-        } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
-        }
-    }
-
     public function list(Request $req) {
         try {
             $withPermission = $req->query('permission') === 'true';
@@ -69,7 +48,7 @@ class RoleController extends Controller
                 ]
             */
 
-            $permission_array = $req->only(['permissions'])['permissions'];
+            $permission_array = $req->permissions;
 
             $existing_permissions = Permission::whereIn('id', $permission_array)->pluck('id')->toArray();
 

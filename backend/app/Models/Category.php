@@ -11,6 +11,29 @@ class Category extends Model
 
     protected $fillable = [
         'name',
+        'user_id',
+        'num_question',
+        'total_time'
     ];
 
+    // Relationships
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function questions() {
+        return $this->hasMany(Question::class);
+    }
+
+    // Custom method
+    public function countQuestions() {
+        return $this->questions->count();
+    }
+
+    public function checkEnoughQuestions() {
+        $max_questions = $this->num_question;
+        $total_questions = $this->countQuestions();
+
+        return $total_questions >= $max_questions;
+    }
 }

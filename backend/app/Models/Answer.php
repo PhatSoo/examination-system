@@ -15,4 +15,16 @@ class Answer extends Model
         'is_correct',
         'type'
     ];
+
+    // Relationships
+    public function question() {
+        return $this->belongsTo(Question::class);
+    }
+
+    // Custom Method
+    public function checkValid() {
+        $has_correct_answer = $this->question->checkHasCorrectAnswer();
+
+        return $has_correct_answer;
+    }
 }
