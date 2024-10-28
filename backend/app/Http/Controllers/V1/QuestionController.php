@@ -184,6 +184,11 @@ class QuestionController extends Controller
                 return $this->sendError(message: "Question with ID::${id} not found", statusCode: 404);
             }
 
+            $checked = Gate::inspect('manage', $data);
+            if (!$checked->allowed()) {
+                return $this->sendError(message: 'You have no permissions to view detail this Question', statusCode: $checked->status());
+            }
+
             return $this->sendResponse(message: "Retrieve Question with ID::${id} success", data: $data);
         } catch (\Throwable $th) {
             return $this->sendError(message: $th->getMessage());
