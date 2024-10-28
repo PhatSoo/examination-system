@@ -28,7 +28,6 @@ class RolePermissionSeeder extends Seeder
             'create-question-answer' => 'Can Create new question & answers',
             'manage-own-category' => 'Can Edit|Delete categories they created',
             'manage-own-question-answer' => 'Can Edit|Delete questions & answers they created',
-            'view-own-category-result' => 'Can view all results of students that join the exam they created',
             'full-access' => 'Full access to the system'
         ];
 
@@ -38,7 +37,7 @@ class RolePermissionSeeder extends Seeder
 
         $admin->permissions()->sync(Permission::where('name', 'full-access')->get());
         $teacher->permissions()->sync(Permission::whereIn('name', ['create-category', 'create-question-answer', 'manage-own-category', 'join-exam',
-                                    'manage-own-question-answer', 'view-own-category-result'])->get());
+                                    'manage-own-question-answer'])->get());
         $student->permissions()->sync(Permission::whereIn('name', ['view-result', 'join-exam'])->get());
     }
 }
