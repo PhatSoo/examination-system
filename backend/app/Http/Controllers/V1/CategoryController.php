@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Category;
 
@@ -39,7 +40,8 @@ class CategoryController extends Controller
 
             return $this->sendResponse(message: 'Create new Category success', statusCode: 201);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -57,7 +59,8 @@ class CategoryController extends Controller
 
             return $this->sendResponse(message: $message, data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -82,7 +85,8 @@ class CategoryController extends Controller
 
             return $this->sendResponse(message: "Retrieve Answers of Category with ID::$id success.", data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -92,7 +96,8 @@ class CategoryController extends Controller
 
             return $this->sendResponse(message: "Retrieve Category of User ID::$author_id success.", data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -108,7 +113,8 @@ class CategoryController extends Controller
 
             return $this->sendResponse(message: "Retrieve Category with ID::$id success", data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -142,7 +148,8 @@ class CategoryController extends Controller
 
             return $this->sendResponse(message: "Update Category with id $id success.", statusCode: 204);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -163,7 +170,8 @@ class CategoryController extends Controller
 
             return $this->sendResponse(message: "Remove Category with ID::${id} success");
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -196,7 +204,8 @@ class CategoryController extends Controller
 
             return $this->sendResponse(statusCode: 204);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 }

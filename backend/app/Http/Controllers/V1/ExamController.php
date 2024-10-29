@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Exam;
 use App\Models\User;
@@ -36,7 +37,8 @@ class ExamController extends Controller
 
             return $this->sendResponse(message: 'Create new Exam success', data: $data, statusCode: 201);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -52,7 +54,8 @@ class ExamController extends Controller
 
             return $this->sendResponse(message: "Retrieve all results of User ID::$user_id success.", data: $data, statusCode: 200);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -72,7 +75,8 @@ class ExamController extends Controller
 
             return $this->sendResponse(message: "Retrieve all results of User ID::$id success.", data: $data, statusCode: 200);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -93,7 +97,8 @@ class ExamController extends Controller
 
             return $this->sendResponse(message: "Retrieve all results by Category ID::$id success.", data: $data, statusCode: 200);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -151,7 +156,8 @@ class ExamController extends Controller
             $data['detail'] = $answers;
             return $this->sendResponse(message: "Calculate the Exam score success.", data: $data, statusCode: 200);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
