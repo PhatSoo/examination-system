@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Permission;
 
@@ -17,7 +18,8 @@ class PermissionController extends Controller
 
             return $this->sendResponse(message: 'Retrieve all Permission success', data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 

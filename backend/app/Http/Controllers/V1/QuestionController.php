@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Category;
 use App\Models\Question;
-use App\Models\Answer;
 
 class QuestionController extends Controller
 {
@@ -85,41 +85,34 @@ class QuestionController extends Controller
 
             $fields['user_id'] = auth()->user()->id;
 
-            $createdNew = new Question();
-            $createdNew->fill($fields);
-            $createdNew->save();
+            $question = new Question();
+            $question->fill($fields);
+            $question->save();
 
             // after create question
             // --- add answer ---
-            $question_id = $createdNew->id;
-            if (is_null($question_id)) {
-                DB::rollBack();
-                return $this->sendError(message: 'Something went wrong went creating Question', statusCode: 400);
-            }
 
-            foreach ($answer_fields as &$field) {
-                $field['question_id'] = $question_id;
-
+            foreach ($answer_fields as $field) {
                 $validated = Validator::make($field, [
                     'title' => 'required|string',
                     'is_correct' => 'required|boolean',
                     'type' => 'required|in:image,text',
-                    'question_id' => 'required|numeric|exists:questions,id'
                 ]);
 
                 if ($validated->fails()) {
                     DB::rollBack();
                     return $this->sendError(message: $validated->messages(), statusCode: 400);
                 }
-            }
 
-            Answer::insert($answer_fields);
+                $question->answers()->create($field);
+            }
 
             DB::commit();
             return $this->sendResponse(message: 'Create new Question success', statusCode: 201);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -159,7 +152,8 @@ class QuestionController extends Controller
 
             return $this->sendResponse(message: "Update Question with ID::$id success.", statusCode: 204);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -191,7 +185,8 @@ class QuestionController extends Controller
 
             return $this->sendResponse(message: "Retrieve Question with ID::${id} success", data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -212,7 +207,8 @@ class QuestionController extends Controller
 
             return $this->sendResponse(message: "Remove Question with ID::${id} success");
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 }

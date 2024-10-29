@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Answer;
 
@@ -16,7 +17,8 @@ class AnswerController extends Controller
         try {
             return $this->sendResponse(message: "Retrieve Answer with ID::${id} success", data: Answer::find($id));
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -47,7 +49,8 @@ class AnswerController extends Controller
 
             return $this->sendResponse(message: "Update Answer with ID::${id} success");
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
