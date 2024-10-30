@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 use App\Models\Category;
 
@@ -48,18 +49,23 @@ class CategoryController extends Controller
     public function list(Request $req) {
         try {
             $withOwner = $req->query('owner') === 'true';
+            $cacheKey = "cate?owner=$withOwner";
 
-            if ($withOwner) {
-                $data = auth()->user()->categories;
-                $message = 'Retrieve all Category created by current user success';
-            } else {
-                $data = Category::all();
-                $message = 'Retrieve all Category success';
-            }
+            [$data, $message] = Cache::remember($cacheKey, 60, function () use ($withOwner) {
+                if ($withOwner) {
+                    $data = auth()->user()->categories;
+                    $message = 'Retrieve all Category created by current user success';
+                } else {
+                    $data = Category::all();
+                    $message = 'Retrieve all Category success';
+                }
+
+                return [$data, $message];
+            });
 
             return $this->sendResponse(message: $message, data: $data);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            Log::error($th->getMessage() . " on file::" . $th->getFile() ." ...at line::" . $th->getLine());
             return $this->sendError();
         }
     }

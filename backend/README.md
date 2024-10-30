@@ -2,7 +2,7 @@
 
 ## Table of Contents <!-- omit from toc -->
 
-- [Getting Started](#getting-started)
+- [GETTING STARTED](#getting-started)
   - [Requirements](#requirements)
   - [Installation](#installation)
       - [1. Clone the repository:](#1-clone-the-repository)
@@ -22,10 +22,10 @@
 - [AUTHORIZATION SYSTEM](#authorization-system)
   - [Roles \& Permissions](#roles--permissions)
   - [Permission describe](#permission-describe)
-  - [Endpoint Details](#endpoint-details)
-    - [Error Handling](#error-handling)
-    - [Request Headers](#request-headers)
-    - [Response Structure](#response-structure)
+- [ENDPOINT DETAILS](#endpoint-details)
+  - [Error Handling](#error-handling)
+  - [Request Headers](#request-headers)
+  - [Response Structure](#response-structure)
   - [1. Authentication](#1-authentication-1)
     - [_Register_](#register)
     - [_Login_](#login)
@@ -62,7 +62,7 @@
     - [_Result by UserID_ {#exam}](#result-by-userid-exam)
     - [_Result by Category_ {#exam}](#result-by-category-exam)
 
-# Getting Started
+# GETTING STARTED
 
 > # REST API for Examination System
 
@@ -250,9 +250,9 @@ php artisan serve
 
 ---
 
-## Endpoint Details
+# ENDPOINT DETAILS
 
-### Error Handling
+## Error Handling
 
 | Status Code | Message                 | Description                                                           |
 | ----------- | ----------------------- | --------------------------------------------------------------------- |
@@ -262,13 +262,13 @@ php artisan serve
 | `404`       | `Not found`             | The content does not found.                                           |
 | `500`       | `Internal server error` | The server has encountered a situation it doesn't know how to handle. |
 
-### Request Headers
+## Request Headers
 
 | Header          | Type     | Validation | Description                    |
 | --------------- | -------- | ---------- | ------------------------------ |
 | `Authorization` | `string` | Required   | Bearer token for authorization |
 
-### Response Structure
+## Response Structure
 
 ```json
 {
