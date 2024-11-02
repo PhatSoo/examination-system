@@ -16,6 +16,9 @@ Route::prefix('v1')->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::post('/login', 'login');
         Route::post('/register', 'register');
+        Route::post('/forget-password', 'forgetPassword');
+        Route::get('/reset-password', 'tokenResetPassword')->name('password.reset');
+        Route::post('/reset-password', 'resetPassword');
     });
 
     Route::middleware([\Illuminate\Session\Middleware\StartSession::class])->controller(SocialiteController::class)->group(function () {

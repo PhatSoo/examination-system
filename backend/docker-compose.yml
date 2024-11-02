@@ -1,5 +1,5 @@
 services:
-    examination-system:
+    db-mysql:
         image: mysql:latest
         environment:
             - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
@@ -9,7 +9,19 @@ services:
             - ${DB_PORT}:3306
         volumes:
             - examination-db:/var/lib/mysql
-        container_name: examination-system
+        container_name: examination-system-mysql
+
+    db-redis:
+        image: redis:latest
+        environment:
+            - name=value
+        restart: always
+        ports:
+            - ${REDIS_PORT}:6379
+        volumes:
+            - examination-redis:/data
+        container_name: examination-system-redis
 
 volumes:
     examination-db:
+    examination-redis:

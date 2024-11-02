@@ -78,7 +78,7 @@ class QuestionController extends Controller
             // Check number of Answer === 4 ?
             $answer_fields = $req->answers;
 
-            if (count($answer_fields) <> 4) {
+            if (count($answer_fields) != 4) {
                 DB::rollBack();
                 return $this->sendError(message: 'The quantity of Answers must equal 4', statusCode: 400);
             }
