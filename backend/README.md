@@ -30,6 +30,8 @@
     - [_Register_](#register)
     - [_Login_](#login)
     - [_Logout_](#logout)
+    - [_Forget Password_](#forget-password)
+    - [_Reset Password_](#reset-password)
     - [_Get Current User_](#get-current-user)
   - [2. Role](#2-role-1)
     - [_List_ {#role}](#list-role)
@@ -148,12 +150,14 @@ php artisan serve
 
 -   ### Prefix: `/`
 
-| Method | Endpoint    | Description                    |
-| ------ | ----------- | ------------------------------ |
-| `POST` | `/login`    | [User login](#login)           |
-| `POST` | `/register` | [User register](#register)     |
-| `POST` | `/logout`   | [User logout](#logout)         |
-| `GET`  | `/profile`  | [User info](#get-current-user) |
+| Method | Endpoint           | Description                         |
+| ------ | ------------------ | ----------------------------------- |
+| `POST` | `/login`           | [User login](#login)                |
+| `POST` | `/register`        | [User register](#register)          |
+| `POST` | `/logout`          | [User logout](#logout)              |
+| `POST` | `/forget-password` | [Forget password](#forget-password) |
+| `POST` | `/reset-password`  | [Reset password](#reset-password)   |
+| `GET`  | `/profile`         | [User info](#get-current-user)      |
 
 ## 2. Role
 
@@ -377,6 +381,55 @@ php artisan serve
         }
         ```
     -   **401 Unauthorized**: view at [Error Handling](#error-handling)
+
+    -   **500 Internal Server Error**: view at [Error Handling](#error-handling)
+
+### _Forget Password_
+
+-   **Endpoint:** `/forget-password`
+-   **Method:** `POST`
+-   **Description:** Help users reset their password when they forget it.
+
+    #### **Request Body**
+    | Field   | Type     | Validation | Description          |
+    | ------- | -------- | ---------- | -------------------- |
+    | `email` | `string` | Required   | User's email address |
+
+    #### Response
+
+    -   **200 OK**: Request success.
+        ```json
+        {
+            "message": "We have emailed your password reset link."
+        }
+        ```
+    -   **400 Bad Request**: view at [Error Handling](#error-handling)
+
+    -   **500 Internal Server Error**: view at [Error Handling](#error-handling)
+
+### _Reset Password_
+
+-   **Endpoint:** `/reset-password`
+-   **Method:** `POST`
+-   **Description:** Help user change New Password.
+
+    #### **Request Body**
+    | Field                   | Type     | Validation | Description                   |
+    | ----------------------- | -------- | ---------- | ----------------------------- |
+    | `email`                 | `string` | Required   | User's email address          |
+    | `token`                 | `string` | Required   | Token response get from email |
+    | `password`              | `string` | Required   | New Password                  |
+    | `password_confirmation` | `string` | Required   | New Password confirmation     |
+
+    #### Response
+
+    -   **200 OK**: Request success.
+        ```json
+        {
+            "message": "Your password has been reset."
+        }
+        ```
+    -   **400 Bad Request**: view at [Error Handling](#error-handling)
 
     -   **500 Internal Server Error**: view at [Error Handling](#error-handling)
 
