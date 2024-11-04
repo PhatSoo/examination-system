@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 use App\Models\Role;
 use App\Models\Permission;
@@ -20,8 +19,7 @@ class RoleController extends Controller
 
             return $this->sendResponse(message: 'Retrieve all Role success', data: $data);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 
@@ -68,8 +66,7 @@ class RoleController extends Controller
             return $this->sendResponse(message: 'Add Permissions to Role success', statusCode: 201);
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 }

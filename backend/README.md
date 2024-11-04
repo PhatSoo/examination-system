@@ -74,6 +74,7 @@
 PHP >= 8.0
 Laravel >= 11.x
 MySQL (Docker)
+Redis (Docker)
 ```
 
 ## Installation
@@ -180,6 +181,7 @@ php artisan serve
 
 ## 4. Category
 
+-   ### Cache used
 -   ### Prefix: `/category`
 
 | Method   | Endpoint              | Description                                                          |
@@ -215,6 +217,7 @@ php artisan serve
 
 ## 7. Exam
 
+-   ### Cache used
 -   ### Prefix: `/exam`
 
 | Method | Endpoint                  | Description                                                                          |
@@ -279,7 +282,7 @@ php artisan serve
   "status": "success" || "failed",      // "success" if status = 2**, otherwise return "failed"
   "statusCode": 200,                    // request status
   "message": "...",                     // error message or response message
-  "data": [ ... ]                       // return data (if exist). default: null
+  "result": [ ... ]                       // return data (if exist). default: null
 }
 ```
 
@@ -340,7 +343,7 @@ php artisan serve
         ```json
         {
             "message": "Login success!",
-            "data": {
+            "result": {
                 "token": "your-access-token"
             }
         }
@@ -446,7 +449,7 @@ php artisan serve
         ```json
         {
             "message": "Get profile success!",
-            "data": {
+            "result": {
                 "id": "user-id",
                 "name": "user-name",
                 "email": "user-email",
@@ -489,7 +492,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve all Role success",
-            "data": {
+            "result": {
                 "id": "role-id",
                 "name": "role-name"
             }
@@ -524,7 +527,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve Role with ID::{id} success",
-            "data": {
+            "result": {
                 "id": "role-id",
                 "name": "role-name",
                 "permissions": [
@@ -602,7 +605,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve all Permission success",
-            "data": {
+            "result": {
                 "id": "permission-id",
                 "name": "permission-name",
                 "description": "permission-describe"
@@ -638,7 +641,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve Permission success",
-            "data": {
+            "result": {
                 "id": "permission-id",
                 "name": "permission-name",
                 "description": "permission-describe",
@@ -682,7 +685,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve all Category success",
-            "data": [
+            "result": [
                 {
                     "id": "category-id",
                     "name": "category-name",
@@ -720,7 +723,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve Category with ID:{id} success",
-            "data": {
+            "result": {
                 "id": "category-id",
                 "name": "category-name",
                 "slug": "category-slug",
@@ -752,7 +755,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve all Category by User ID success",
-            "data": [
+            "result": [
                 {
                     "id": "category-id",
                     "name": "category-name",
@@ -785,7 +788,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve Answers of Category with ID::2 success.",
-            "data": [
+            "result": [
                 {
                     "id": "question-id",
                     "name": "question-name",
@@ -950,7 +953,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve Question with ID::{id} success",
-            "data": {
+            "result": {
                 "title": "question-title",
                 "difficulty": "question-difficulty",
                 "category_id": "category-id",
@@ -998,7 +1001,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve Question with ID::{id} success",
-            "data": {
+            "result": {
                 "title": "question-title",
                 "difficulty": "question-difficulty",
                 "category_id": "category-id",
@@ -1089,7 +1092,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve Answer with ID::{id} success",
-            "data": {
+            "result": {
                 "id": "answer-id",
                 "question_id": "question-id",
                 "is_correct": "is this a correct answer",
@@ -1198,7 +1201,7 @@ php artisan serve
         ```json
         {
             "message": "Calculate the Exam score success.",
-            "data": {
+            "result": {
                 "score": "user score",
                 "detail": {
                     "question_id": "question-id",
@@ -1236,7 +1239,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve all results of User ID::2 success.",
-            "data": [
+            "result": [
                 {
                     "id": "exam-id",
                     "user_id": "user-id",
@@ -1276,7 +1279,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve all results of User ID::2 success.",
-            "data": [
+            "result": [
                 {
                     "id": "exam-id",
                     "user_id": "user-id",
@@ -1312,7 +1315,7 @@ php artisan serve
         ```json
         {
             "message": "Retrieve all results of Category ID::{id} success.",
-            "data": [
+            "result": [
                 {
                     "id": "exam-id",
                     "user_id": "user-id",
