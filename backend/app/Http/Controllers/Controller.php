@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
+
 abstract class Controller
 {
     public function sendResponse($message = 'Done', $data = null, $statusCode = 200) {
@@ -9,7 +11,7 @@ abstract class Controller
             'status' => 'success',
             'statusCode' => $statusCode,
             'message' => $message,
-            'data' => $data,
+            'result' => $data,
         ];
 
         return response()->json($response, $statusCode);
@@ -23,5 +25,10 @@ abstract class Controller
         ];
 
         return response()->json($response, $statusCode);
+    }
+
+    public function handleException(\Throwable $th) {
+        Log::error("An error occurred: " . $th->getMessage() . " on file::" . $th->getFile() ." ...at line::" . $th->getLine());
+        return $this->sendError();
     }
 }
