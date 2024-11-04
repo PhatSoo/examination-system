@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -33,6 +34,7 @@ class User extends Authenticatable
         ];
     }
 
+    // Relationships
     public function role() {
         return $this->belongsTo(Role::class);
     }
@@ -43,5 +45,12 @@ class User extends Authenticatable
 
     public function questions() {
         return $this->hasMany(Question::class);
+    }
+
+    // Custom method
+    public function sendPasswordResetNotification($token) {
+        $url = env('APP_URL') . ":8000/api/v1/reset-password?token=$token";
+
+        $this->notify(new ResetPasswordNotification($url));
     }
 }

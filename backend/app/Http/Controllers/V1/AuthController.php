@@ -5,7 +5,6 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 
 use App\Models\User;
@@ -32,8 +31,7 @@ class AuthController extends Controller
 
             return $this->sendResponse(message: 'Create new Account success', statusCode: 201);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 
@@ -60,8 +58,7 @@ class AuthController extends Controller
                 'token' => auth()->user()->createToken("$role token")->accessToken
             ]);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 
@@ -69,8 +66,7 @@ class AuthController extends Controller
         try {
             return $this->sendResponse(message: 'Get Profile success!', data: auth()->user()->load('role'));
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 
@@ -79,8 +75,7 @@ class AuthController extends Controller
             $req->user()->token()->delete();
             return $this->sendResponse(message: 'Logout success!');
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 
@@ -104,9 +99,8 @@ class AuthController extends Controller
 
     public function tokenResetPassword(Request $req) {
         $token = $req->query('token');
-        $email = $req->query('email');
 
-        return $this->sendResponse(message: 'Reset token!', data: ['token'=>$token, 'email' => $email]);
+        return $this->sendResponse(message: 'Reset token!', data: ['token' => $token]);
     }
 
     public function resetPassword(Request $req) {

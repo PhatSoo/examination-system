@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 
 use App\Models\Category;
 use App\Models\Question;
@@ -111,8 +110,7 @@ class QuestionController extends Controller
             return $this->sendResponse(message: 'Create new Question success', statusCode: 201);
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 
@@ -152,8 +150,7 @@ class QuestionController extends Controller
 
             return $this->sendResponse(message: "Update Question with ID::$id success.", statusCode: 204);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 
@@ -185,8 +182,7 @@ class QuestionController extends Controller
 
             return $this->sendResponse(message: "Retrieve Question with ID::${id} success", data: $data);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 
@@ -207,8 +203,7 @@ class QuestionController extends Controller
 
             return $this->sendResponse(message: "Remove Question with ID::${id} success");
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
-            return $this->sendError();
+            return $this->handleException($th);
         }
     }
 }
