@@ -84,7 +84,7 @@ Redis (Docker)
 ## Project Description: Exam Management API System
 
 ### 1. Project Objectives
-        This project involves developing an API system for managing the examination process within an organization or educational institution. The system enables users to register, authenticate, manage exam content (such as questions and answers), and evaluate results. From account registration and login to managing exams and viewing results, the project covers the entire exam lifecycle.
+>    This project involves developing an API system for managing the examination process within an organization or educational institution. The system enables users to register, authenticate, manage exam content (such as questions and answers), and evaluate results. From account registration and login to managing exams and viewing results, the project covers the entire exam lifecycle.
 
 ### 2. Technologies and Tools Used
 -   **Framework:** Laravel is used to build the API, providing powerful features for routing, authentication, and database management.
@@ -95,7 +95,7 @@ Redis (Docker)
 -   **Containerization with Docker:** Docker is used to containerize the application, making it easier to deploy and manage across different environments while ensuring consistent performance.
 
 ### 3. Project Benefits
-        This API system helps automate and streamline the examination process, making it more transparent and efficient. Schools or organizations can use it to manage exams seamlessly, reducing manual work and enhancing user experience with automated features and user-friendly design.
+>    This API system helps automate and streamline the examination process, making it more transparent and efficient. Schools or organizations can use it to manage exams seamlessly, reducing manual work and enhancing user experience with automated features and user-friendly design.
 
 ## Installation
 
