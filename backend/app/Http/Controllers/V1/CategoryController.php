@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 use App\Models\Category;
 
@@ -37,27 +39,36 @@ class CategoryController extends Controller
             $createdNew->fill($fields);
             $createdNew->save();
 
+            Cache::tags('category')->flush();
+
             return $this->sendResponse(message: 'Create new Category success', statusCode: 201);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
     public function list(Request $req) {
         try {
             $withOwner = $req->query('owner') === 'true';
+            $cacheKey = "cate?owner=$withOwner";
 
-            if ($withOwner) {
-                $data = auth()->user()->categories;
-                $message = 'Retrieve all Category created by current user success';
-            } else {
-                $data = Category::all();
-                $message = 'Retrieve all Category success';
-            }
+            [$data, $message] = Cache::tags('category')->remember($cacheKey, 60, function () use ($withOwner) {
+                if ($withOwner) {
+                    $data = auth()->user()->categories;
+                    $message = 'Retrieve all Category created by current user success';
+                } else {
+                    $data = Category::all();
+                    $message = 'Retrieve all Category success';
+                }
+
+                return [$data, $message];
+            });
 
             return $this->sendResponse(message: $message, data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " on file::" . $th->getFile() ." ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -73,42 +84,57 @@ class CategoryController extends Controller
                 return $this->sendError(message: $checked->message(), statusCode: $checked->status());
             }
 
-            $data = $foundItem->questions;
-
             $withAnswer = $req->query('answer') === 'true';
-            if ($withAnswer) {
-                $data->load('answers');
-            }
+            $cacheKey = "cateQuestions?answer=$withAnswer";
+
+            $data = Cache::tags('category')->remember($cacheKey, 60, function () use ($foundItem, $withAnswer) {
+                $data = $foundItem->questions;
+
+                if ($withAnswer) {
+                    $data->load('answers');
+                }
+                return $data;
+            });
 
             return $this->sendResponse(message: "Retrieve Answers of Category with ID::$id success.", data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
     public function listByAuthor(Request $req, $author_id) {
         try {
-            $data = Category::where('user_id', $author_id)->get();
+            $cacheKey = "cateByAuthor";
+            $data = Cache::tags('category')->remember($cacheKey, 60, function () use($author_id){
+                return Category::where('user_id', $author_id)->get();
+            });
 
             return $this->sendResponse(message: "Retrieve Category of User ID::$author_id success.", data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
     public function detail(Request $req, $id) {
         try {
             $withUser = $req->query('userInfo') === 'true';
+            $cacheKey = "cate:$id";
 
-            $data = Category::find($id);
+            $data = Cache::tags('category')->remember($cacheKey, 60, function () use ($id, $withUser) {
+                $data = Category::find($id);
 
-            if ($withUser) {
-                $data = $data->load('user');
-            }
+                if ($withUser) {
+                    $data->load('user');
+                }
+                return $data;
+            });
 
             return $this->sendResponse(message: "Retrieve Category with ID::$id success", data: $data);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -140,9 +166,12 @@ class CategoryController extends Controller
 
             $foundItem->update($fields);
 
+            Cache::tags('category')->flush();
+
             return $this->sendResponse(message: "Update Category with id $id success.", statusCode: 204);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -160,10 +189,12 @@ class CategoryController extends Controller
             }
 
             $foundItem->delete();
+            Cache::tags('category')->flush();
 
             return $this->sendResponse(message: "Remove Category with ID::${id} success");
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -193,10 +224,12 @@ class CategoryController extends Controller
             $foundItem->status = $newStatus;
 
             $foundItem->save();
+            Cache::tags('category')->flush();
 
             return $this->sendResponse(statusCode: 204);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 }

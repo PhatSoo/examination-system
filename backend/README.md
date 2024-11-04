@@ -2,7 +2,7 @@
 
 ## Table of Contents <!-- omit from toc -->
 
-- [Getting Started](#getting-started)
+- [GETTING STARTED](#getting-started)
   - [Requirements](#requirements)
   - [Installation](#installation)
       - [1. Clone the repository:](#1-clone-the-repository)
@@ -22,14 +22,16 @@
 - [AUTHORIZATION SYSTEM](#authorization-system)
   - [Roles \& Permissions](#roles--permissions)
   - [Permission describe](#permission-describe)
-  - [Endpoint Details](#endpoint-details)
-    - [Error Handling](#error-handling)
-    - [Request Headers](#request-headers)
-    - [Response Structure](#response-structure)
+- [ENDPOINT DETAILS](#endpoint-details)
+  - [Error Handling](#error-handling)
+  - [Request Headers](#request-headers)
+  - [Response Structure](#response-structure)
   - [1. Authentication](#1-authentication-1)
     - [_Register_](#register)
     - [_Login_](#login)
     - [_Logout_](#logout)
+    - [_Forget Password_](#forget-password)
+    - [_Reset Password_](#reset-password)
     - [_Get Current User_](#get-current-user)
   - [2. Role](#2-role-1)
     - [_List_ {#role}](#list-role)
@@ -62,7 +64,7 @@
     - [_Result by UserID_ {#exam}](#result-by-userid-exam)
     - [_Result by Category_ {#exam}](#result-by-category-exam)
 
-# Getting Started
+# GETTING STARTED
 
 > # REST API for Examination System
 
@@ -148,12 +150,14 @@ php artisan serve
 
 -   ### Prefix: `/`
 
-| Method | Endpoint    | Description                    |
-| ------ | ----------- | ------------------------------ |
-| `POST` | `/login`    | [User login](#login)           |
-| `POST` | `/register` | [User register](#register)     |
-| `POST` | `/logout`   | [User logout](#logout)         |
-| `GET`  | `/profile`  | [User info](#get-current-user) |
+| Method | Endpoint           | Description                         |
+| ------ | ------------------ | ----------------------------------- |
+| `POST` | `/login`           | [User login](#login)                |
+| `POST` | `/register`        | [User register](#register)          |
+| `POST` | `/logout`          | [User logout](#logout)              |
+| `POST` | `/forget-password` | [Forget password](#forget-password) |
+| `POST` | `/reset-password`  | [Reset password](#reset-password)   |
+| `GET`  | `/profile`         | [User info](#get-current-user)      |
 
 ## 2. Role
 
@@ -250,9 +254,9 @@ php artisan serve
 
 ---
 
-## Endpoint Details
+# ENDPOINT DETAILS
 
-### Error Handling
+## Error Handling
 
 | Status Code | Message                 | Description                                                           |
 | ----------- | ----------------------- | --------------------------------------------------------------------- |
@@ -262,13 +266,13 @@ php artisan serve
 | `404`       | `Not found`             | The content does not found.                                           |
 | `500`       | `Internal server error` | The server has encountered a situation it doesn't know how to handle. |
 
-### Request Headers
+## Request Headers
 
 | Header          | Type     | Validation | Description                    |
 | --------------- | -------- | ---------- | ------------------------------ |
 | `Authorization` | `string` | Required   | Bearer token for authorization |
 
-### Response Structure
+## Response Structure
 
 ```json
 {
@@ -377,6 +381,55 @@ php artisan serve
         }
         ```
     -   **401 Unauthorized**: view at [Error Handling](#error-handling)
+
+    -   **500 Internal Server Error**: view at [Error Handling](#error-handling)
+
+### _Forget Password_
+
+-   **Endpoint:** `/forget-password`
+-   **Method:** `POST`
+-   **Description:** Help users reset their password when they forget it.
+
+    #### **Request Body**
+    | Field   | Type     | Validation | Description          |
+    | ------- | -------- | ---------- | -------------------- |
+    | `email` | `string` | Required   | User's email address |
+
+    #### Response
+
+    -   **200 OK**: Request success.
+        ```json
+        {
+            "message": "We have emailed your password reset link."
+        }
+        ```
+    -   **400 Bad Request**: view at [Error Handling](#error-handling)
+
+    -   **500 Internal Server Error**: view at [Error Handling](#error-handling)
+
+### _Reset Password_
+
+-   **Endpoint:** `/reset-password`
+-   **Method:** `POST`
+-   **Description:** Help user change New Password.
+
+    #### **Request Body**
+    | Field                   | Type     | Validation | Description                   |
+    | ----------------------- | -------- | ---------- | ----------------------------- |
+    | `email`                 | `string` | Required   | User's email address          |
+    | `token`                 | `string` | Required   | Token response get from email |
+    | `password`              | `string` | Required   | New Password                  |
+    | `password_confirmation` | `string` | Required   | New Password confirmation     |
+
+    #### Response
+
+    -   **200 OK**: Request success.
+        ```json
+        {
+            "message": "Your password has been reset."
+        }
+        ```
+    -   **400 Bad Request**: view at [Error Handling](#error-handling)
 
     -   **500 Internal Server Error**: view at [Error Handling](#error-handling)
 

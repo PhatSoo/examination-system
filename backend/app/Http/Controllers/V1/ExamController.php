@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 use App\Models\Exam;
 use App\Models\User;
@@ -36,23 +38,28 @@ class ExamController extends Controller
 
             return $this->sendResponse(message: 'Create new Exam success', data: $data, statusCode: 201);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
     public function userResult(Request $req) {
         try {
             $user_id = auth()->user()->id;
-
-            $data = Exam::where('user_id', $user_id)
-                        ->when($req->query('category'), function($query, $category) {
+            $cacheKey = "byAuthUser:$user_id";
+            $withUserId = $req->query('category') === 'true';
+            $data = Cache::tags('result')->remember($cacheKey, 60, function () use($user_id, $withUserId) {
+                return Exam::where('user_id', $user_id)
+                        ->when($withUserId, function($query, $category) {
                             return $query->where('category_id', $category);
                         })
                         ->get();
+            });
 
             return $this->sendResponse(message: "Retrieve all results of User ID::$user_id success.", data: $data, statusCode: 200);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -63,16 +70,20 @@ class ExamController extends Controller
             if (!$foundItem) {
                 return $this->sendError(message: "User with ID::$id not found.", statusCode: 404);
             }
-
-            $data = Exam::where('user_id', $id)
-                        ->when($req->query('category'), function($query, $category) {
+            $cacheKey = "byUser:$id";
+            $withCate = $req->query('category') === 'true';
+            $data = Cache::tags('result')->remember($cacheKey, 60, function () use($id, $withCate) {
+                return Exam::where('user_id', $id)
+                        ->when($withCate, function($query, $category) {
                             return $query->where('category_id', $category);
                         })
                         ->get();
+            });
 
             return $this->sendResponse(message: "Retrieve all results of User ID::$id success.", data: $data, statusCode: 200);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -89,11 +100,15 @@ class ExamController extends Controller
                 return $this->sendError(message: "You have no permission to view results of other people's Category", statusCode: $checked->status());
             }
 
-            $data = Exam::where('category_id', $id)->get();
+            $cacheKey = "byCate:$id";
+            $data = Cache::tags('result')->remember($cacheKey, 60, function () use ($id) {
+                return Exam::where('category_id', $id)->get();
+            });
 
             return $this->sendResponse(message: "Retrieve all results by Category ID::$id success.", data: $data, statusCode: 200);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
@@ -151,7 +166,8 @@ class ExamController extends Controller
             $data['detail'] = $answers;
             return $this->sendResponse(message: "Calculate the Exam score success.", data: $data, statusCode: 200);
         } catch (\Throwable $th) {
-            return $this->sendError(message: $th->getMessage());
+            Log::error($th->getMessage() . " ...at line::" . $th->getLine());
+            return $this->sendError();
         }
     }
 
