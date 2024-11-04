@@ -4,13 +4,17 @@
 
 - [GETTING STARTED](#getting-started)
   - [Requirements](#requirements)
+  - [Project Description: Exam Management API System](#project-description-exam-management-api-system)
+    - [1. Project Objectives](#1-project-objectives)
+    - [2. Technologies and Tools Used](#2-technologies-and-tools-used)
+    - [3. Project Benefits](#3-project-benefits)
   - [Installation](#installation)
-      - [1. Clone the repository:](#1-clone-the-repository)
-      - [2. Install dependencies:](#2-install-dependencies)
-      - [3. Configure environment variables:](#3-configure-environment-variables)
-      - [4. Run docker for Mysql _(optional)_:](#4-run-docker-for-mysql-optional)
-      - [5. Run migrations \& Create client:](#5-run-migrations--create-client)
-      - [6. Run the server:](#6-run-the-server)
+    - [1. Clone the repository:](#1-clone-the-repository)
+    - [2. Install dependencies:](#2-install-dependencies)
+    - [3. Configure environment variables:](#3-configure-environment-variables)
+    - [4. Run docker for Mysql _(optional)_:](#4-run-docker-for-mysql-optional)
+    - [5. Run migrations \& Create client:](#5-run-migrations--create-client)
+    - [6. Run the server:](#6-run-the-server)
 - [LIST ENDPOINTS](#list-endpoints)
   - [1. Authentication](#1-authentication)
   - [2. Role](#2-role)
@@ -77,9 +81,25 @@ MySQL (Docker)
 Redis (Docker)
 ```
 
+## Project Description: Exam Management API System
+
+### 1. Project Objectives
+        This project involves developing an API system for managing the examination process within an organization or educational institution. The system enables users to register, authenticate, manage exam content (such as questions and answers), and evaluate results. From account registration and login to managing exams and viewing results, the project covers the entire exam lifecycle.
+
+### 2. Technologies and Tools Used
+-   **Framework:** Laravel is used to build the API, providing powerful features for routing, authentication, and database management.
+-   **Authentication** and Authorization: Laravel Passport for API authentication. Role-based permissions limit access to specific endpoints.
+-   **Queue and Asynchronous Processing:** Jobs such as password recovery emails are queued to improve system performance.
+-   **Database:** MySQL manages user data, questions, answers, and exam results.
+-   **Caching with Redis:** Redis is implemented for caching frequently accessed data, such as user sessions and exam content, improving response times and reducing database load.
+-   **Containerization with Docker:** Docker is used to containerize the application, making it easier to deploy and manage across different environments while ensuring consistent performance.
+
+### 3. Project Benefits
+        This API system helps automate and streamline the examination process, making it more transparent and efficient. Schools or organizations can use it to manage exams seamlessly, reducing manual work and enhancing user experience with automated features and user-friendly design.
+
 ## Installation
 
-#### 1. Clone the repository:
+### 1. Clone the repository:
 
 ```bash
 git clone https://github.com/PhatSoo/examiation-system
@@ -87,13 +107,13 @@ git clone https://github.com/PhatSoo/examiation-system
 cd backend
 ```
 
-#### 2. Install dependencies:
+### 2. Install dependencies:
 
 ```bash
 composer install
 ```
 
-#### 3. Configure environment variables:
+### 3. Configure environment variables:
 
 ```bash
 cp .env.example .env
@@ -101,13 +121,13 @@ cp .env.example .env
 
 Update .env with your database credentials and other environment-specific settings.
 
-#### 4. Run docker for Mysql _(optional)_:
+### 4. Run docker for Mysql _(optional)_:
 
 ```bash
 docker compose up -d
 ```
 
-#### 5. Run migrations & Create client:
+### 5. Run migrations & Create client:
 
 -   _Generate Laravel App Key_
 
@@ -133,7 +153,7 @@ php artisan migrate --seed
 php artisan passport:client --personal
 ```
 
-#### 6. Run the server:
+### 6. Run the server:
 
 ```bash
 php artisan serve
