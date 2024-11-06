@@ -14,7 +14,7 @@ class AnswerController extends Controller
 
     public function detail(Request $req, $id) {
         try {
-            return $this->sendResponse(message: "Retrieve Answer with ID::${id} success", data: Answer::find($id));
+            return $this->sendResponse(message: "Retrieve Answer with ID::$id success", data: Answer::find($id));
         } catch (\Throwable $th) {
             return $this->handleException($th);
         }
@@ -45,7 +45,7 @@ class AnswerController extends Controller
 
             $foundItem->update($fields);
 
-            return $this->sendResponse(message: "Update Answer with ID::${id} success");
+            return $this->sendResponse(message: "Update Answer with ID::$id success");
         } catch (\Throwable $th) {
             return $this->handleException($th);
         }

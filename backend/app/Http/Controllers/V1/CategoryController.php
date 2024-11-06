@@ -184,7 +184,7 @@ class CategoryController extends Controller
             $foundItem->delete();
             Cache::tags('category')->flush();
 
-            return $this->sendResponse(message: "Remove Category with ID::${id} success");
+            return $this->sendResponse(message: "Remove Category with ID::$id success");
         } catch (\Throwable $th) {
             return $this->handleException($th);
         }

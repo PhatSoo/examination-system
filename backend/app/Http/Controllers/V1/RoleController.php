@@ -28,7 +28,7 @@ class RoleController extends Controller
 
         $data = $withPermission ? Role::with('permissions')->find($id) : Role::find($id);
 
-        return $this->sendResponse(message: "Retrieve Role with ID::${id} success", data: $data);
+        return $this->sendResponse(message: "Retrieve Role with ID::$id success", data: $data);
     }
 
     public function addPermission(Request $req, $id /* role_id */) {

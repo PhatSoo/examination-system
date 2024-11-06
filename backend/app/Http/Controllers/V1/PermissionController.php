@@ -26,7 +26,7 @@ class PermissionController extends Controller
 
         $data = $withPermission ? Permission::with('roles')->find($id) : Permission::find($id);
 
-        return $this->sendResponse(message: "Retrieve Permission with ID::${id} success", data: $data);
+        return $this->sendResponse(message: "Retrieve Permission with ID::$id success", data: $data);
     }
 
 }
